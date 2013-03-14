@@ -7,13 +7,13 @@ Feature: Convert YAML to JSON
         Given I have a file "list.yml" containing
         """
         - One
-        - Two
-        - Three
+        - 2
+        - "3"
         """
         When I process "list.yml"
         Then the output should match JSON
         """
-        [ "One", "Two", "Three" ]
+        [ "One", 2, "3" ]
         """
 
     Scenario: Basic map conversion
@@ -33,3 +33,31 @@ Feature: Convert YAML to JSON
         }
         """
 
+    Scenario: Embedded map structure
+        Given I have a file "embeddedmap.yml" containing
+        """
+        Fruit:
+            - Apples: [ red, green ]
+            - Bananas
+            - Grapes: [ seeded, seedless ]
+        Vegetables:
+            - Beans: [ red, black ]
+            - Sweet Corn
+            - Mirleton
+        """
+        When I process "embeddedmap.yml"
+        Then the output should match JSON
+        """
+        {
+            "Fruit": [
+                { "Apples": [ "red", "green" ] },
+                "Bananas",
+                { "Grapes": [ "seeded", "seedless" ] }
+            ],
+            "Vegetables": [
+                { "Beans": [ "red", "black" ] },
+                "Sweet Corn",
+                "Mirleton"
+            ]
+        }
+        """
