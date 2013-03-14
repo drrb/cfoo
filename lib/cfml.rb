@@ -1,5 +1,5 @@
+require "cfml/cfml"
+require "cfml/processor"
+require "cfml/project"
 require "cfml/version"
 
-module Cfml
-  # Your code goes here...
-end
