@@ -19,12 +19,38 @@ module Cfml
                     processor.process("myfile.yml").should == { "a" => "b" }
                 end
             end
-            context "when presented with simple EL references in an array" do
-                it 'turns them into CloudFormation "Ref" maps' do
-                    input_array = [ "one", "${two}", "three" ]
-                    processed_array = [ "one", {"Ref" => "two"}, "three" ]
-                    project.should_receive(:parse_file).with("myfile.yml").and_return(input_array)
-                    processor.process("myfile.yml").should == processed_array
+            context "when presented with EL references" do
+                context "in an array" do
+                    let(:input_array) {[ "one", "${two}", "three" ]}
+                    before do
+                        project.should_receive(:parse_file).with("myfile.yml").and_return(input_array)
+                    end
+
+                    it 'turns simple references into CloudFormation "Ref" maps' do
+                        processor.process("myfile.yml")[1].should == {"Ref" => "two"}
+                    end
+                end
+
+                context "in a map" do
+                    let(:input_map) { { "one" => "${two}" } }
+                    before do
+                        project.should_receive(:parse_file).with("myfile.yml").and_return(input_map)
+                    end
+
+                    it 'turns them into CloudFormation "Ref" maps' do
+                        processor.process("myfile.yml")["one"].should == {"Ref" => "two"}
+                    end
+                end
+
+                context "in a complex data structure" do
+                    let(:input_map) { { "one" => ["${two}"] } }
+                    before do
+                        project.should_receive(:parse_file).with("myfile.yml").and_return(input_map)
+                    end
+
+                    it 'turns them into CloudFormation "Ref" maps' do
+                        processor.process("myfile.yml")["one"][0].should == {"Ref" => "two"}
+                    end
                 end
             end
         end

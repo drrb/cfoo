@@ -6,12 +6,40 @@ Feature: Expand EL References
     Scenario: Simple reference
         Given I have a file "reference.yml" containing
         """
-        - One
-        - ${Two}
-        - Three
+        Server:
+            InstanceType: ${InstanceType}
+            SecurityGroups:
+                - sg-123456
+                - ${SshSecurityGroup}
+                - sg-987654
         """
         When I process "reference.yml"
         Then the output should match JSON
         """
-        [ "One", {"Ref":"Two"}, "Three" ]
+        {
+            "Server" : {
+                "InstanceType" : { "Ref" : "InstanceType" },
+                "SecurityGroups" : [
+                    "sg-123456",
+                    { "Ref": "SshSecurityGroup" },
+                    "sg-987654"
+                ]
+            }
+        }
+        """
+
+    Scenario: Embedded reference
+        Given I have a file "reference.yml" containing
+        """
+        content:
+            /var/www/html: http://${DownloadHost}/website.tar.gz
+        """
+        When I process "reference.yml"
+        Then the output should match JSON
+        """
+        {
+            "content": {
+                "/var/www/html" : { "Fn::Join" : [ "", "http://", {"Ref" : "DownloadHost"}, "/website.tar.gz"] }
+            }
+        }
         """
