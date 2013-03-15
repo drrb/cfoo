@@ -6,11 +6,15 @@ end
 
 class String
     def expand_el
-        content = sub /^\$\{(.*)\}$/, '\1'
-        if content == self
-            self
+        case self
+        when /^\$\{.*\}$/
+            reference = sub /^\$\{(.*)\}$/, '\1'
+            { "Ref" => reference }
+        when /\$\{.*\}/
+            parts = rpartition /\$\{.*\}/
+            { "Fn::Join" => [""] + parts.expand_el }
         else
-            { "Ref" => content }
+            self
         end
     end
 end

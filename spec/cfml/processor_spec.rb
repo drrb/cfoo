@@ -19,15 +19,19 @@ module Cfml
                     processor.process("myfile.yml").should == { "a" => "b" }
                 end
             end
-            context "when presented with EL references" do
+            context "when presented with EL" do
                 context "in an array" do
-                    let(:input_array) {[ "one", "${two}", "three" ]}
+                    let(:input_array) {[ "apple", "${orange}", "large ${MelonType} melon" ]}
                     before do
                         project.should_receive(:parse_file).with("myfile.yml").and_return(input_array)
                     end
 
                     it 'turns simple references into CloudFormation "Ref" maps' do
-                        processor.process("myfile.yml")[1].should == {"Ref" => "two"}
+                        processor.process("myfile.yml")[1].should == {"Ref" => "orange"}
+                    end
+
+                    it 'turns references embedded in strings into appended arrays' do
+                        processor.process("myfile.yml")[2].should == {"Fn::Join" => [ "", "large ", { "Ref" => "MelonType" }, " melon" ] }
                     end
                 end
 
@@ -37,7 +41,7 @@ module Cfml
                         project.should_receive(:parse_file).with("myfile.yml").and_return(input_map)
                     end
 
-                    it 'turns them into CloudFormation "Ref" maps' do
+                    it 'turns simple references into CloudFormation "Ref" maps' do
                         processor.process("myfile.yml")["one"].should == {"Ref" => "two"}
                     end
                 end
@@ -48,7 +52,7 @@ module Cfml
                         project.should_receive(:parse_file).with("myfile.yml").and_return(input_map)
                     end
 
-                    it 'turns them into CloudFormation "Ref" maps' do
+                    it 'turns simple references into CloudFormation "Ref" maps' do
                         processor.process("myfile.yml")["one"][0].should == {"Ref" => "two"}
                     end
                 end
