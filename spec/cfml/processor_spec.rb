@@ -21,7 +21,12 @@ module Cfml
             end
             context "when presented with EL" do
                 context "in an array" do
-                    let(:input_array) {[ "apple", "${orange}", "large ${MelonType} melon" ]}
+                    let(:input_array) {[
+                        "apple",
+                        "${orange}",
+                        "large ${MelonType} melon",
+                        "${apple.color}"
+                    ]}
                     before do
                         project.should_receive(:parse_file).with("myfile.yml").and_return(input_array)
                     end
@@ -31,29 +36,41 @@ module Cfml
                     end
 
                     it 'turns references embedded in strings into appended arrays' do
-                        processor.process("myfile.yml")[2].should == {"Fn::Join" => [ "", "large ", { "Ref" => "MelonType" }, " melon" ] }
+                        processor.process("myfile.yml")[2].should == {"Fn::Join" => [ "", [ "large ", { "Ref" => "MelonType" }, " melon" ] ] }
+                    end
+
+                    it 'turns attribute references into CloudFormation "GetAtt" maps' do
+                        processor.process("myfile.yml")[3].should == {"Fn::GetAtt" => ["apple", "color"]}
                     end
                 end
 
                 context "in a map" do
-                    let(:input_map) { { "one" => "${two}" } }
+                    let(:input_map) { { "IpAddress" => "${IpAddress}", "Website URL" => "http://${Hostname}/index.html" } }
                     before do
                         project.should_receive(:parse_file).with("myfile.yml").and_return(input_map)
                     end
 
                     it 'turns simple references into CloudFormation "Ref" maps' do
-                        processor.process("myfile.yml")["one"].should == {"Ref" => "two"}
+                        processor.process("myfile.yml")["IpAddress"].should == {"Ref" => "IpAddress"}
+                    end
+
+                    it 'turns references embedded in strings into appended arrays' do
+                        processor.process("myfile.yml")["Website URL"].should == {"Fn::Join" => [ "", [ "http://", { "Ref" => "Hostname" }, "/index.html" ] ] }
                     end
                 end
 
                 context "in a complex data structure" do
-                    let(:input_map) { { "one" => ["${two}"] } }
+                    let(:input_map) { { "AvailabilityZones" => ["${PublicSubnetAz}"], "URLs" => ["http://${Hostname}/index.html"] } }
                     before do
                         project.should_receive(:parse_file).with("myfile.yml").and_return(input_map)
                     end
 
                     it 'turns simple references into CloudFormation "Ref" maps' do
-                        processor.process("myfile.yml")["one"][0].should == {"Ref" => "two"}
+                        processor.process("myfile.yml")["AvailabilityZones"][0].should == {"Ref" => "PublicSubnetAz"}
+                    end
+
+                    it 'turns references embedded in strings into appended arrays' do
+                        processor.process("myfile.yml")["URLs"][0].should == {"Fn::Join" => [ "", [ "http://", { "Ref" => "Hostname" }, "/index.html" ] ] }
                     end
                 end
             end

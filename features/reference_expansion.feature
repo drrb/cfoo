@@ -39,7 +39,7 @@ Feature: Expand EL References
         """
         {
             "content": {
-                "/var/www/html" : { "Fn::Join" : [ "", "http://", {"Ref" : "DownloadHost"}, "/website.tar.gz"] }
+                "/var/www/html" : { "Fn::Join" : [ "", [ "http://", {"Ref" : "DownloadHost"}, "/website.tar.gz" ] ] }
             }
         }
         """

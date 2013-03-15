@@ -9,10 +9,14 @@ class String
         case self
         when /^\$\{.*\}$/
             reference = sub /^\$\{(.*)\}$/, '\1'
-            { "Ref" => reference }
+            if reference.include? "."
+                { "Fn::GetAtt" => reference.split(".") }
+            else
+                { "Ref" => reference }
+            end
         when /\$\{.*\}/
             parts = rpartition /\$\{.*\}/
-            { "Fn::Join" => [""] + parts.expand_el }
+            { "Fn::Join" => [ "", parts.expand_el ] }
         else
             self
         end

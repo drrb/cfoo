@@ -1,6 +1,6 @@
 Features
 ----------
-"${Resource.Property}" => { "Fn::GetAtt" : "Property" }
+Two EL expressions in one string
 
 Bugs
 ----------

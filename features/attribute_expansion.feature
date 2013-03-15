@@ -3,19 +3,39 @@ Feature: Expand EL Reference Atributes
     I want to use an expression language as a shorthand for references
     So that I my templates are easier to read
 
-    Scenario: Attribute resolution
-        Given I have a file "attribute.yml" containing
+    Scenario: Attribute expansion
+        Given I have a file "outputs.yml" containing
         """
-        - Red
-        - ${Banana.Color}
-        - Blue
+        EntryPoint:
+            Description: IP address of the Bastion Host
+            Value: ${BastionHost.PublicIp}
         """
-        When I process "attribute.yml"
+        When I process "outputs.yml"
         Then the output should match JSON
         """
-        [
-            "Red",
-            {"Fn::GetAtt" : ["Banana" , "Color"]},
-            "Blue"
-        ]
+        {
+            "EntryPoint" : {
+                "Description" : "IP address of the Bastion Host",
+                "Value" :  { "Fn::GetAtt" : [ "BastionHost", "PublicIp" ]}
+            }
+        }
         """
+
+    Scenario: Embedded attribute expansion
+        Given I have a file "outputs.yml" containing
+        """
+        WebSite:
+            Description: URL of the website
+            Value: http://${PublicElasticLoadBalancer.DNSName}/index.html
+        """
+        When I process "outputs.yml"
+        Then the output should match JSON
+        """
+        {
+            "WebSite" : {                                                                                                                                            
+                "Description" : "URL of the website",
+                "Value" :  { "Fn::Join" : [ "", [ "http://", { "Fn::GetAtt" : [ "PublicElasticLoadBalancer", "DNSName" ]}, "/index.html"]]}
+            }
+        }
+        """
+
