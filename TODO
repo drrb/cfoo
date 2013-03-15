@@ -1,0 +1,8 @@
+Features
+----------
+"${Resource.Property}" => { "Fn::GetAtt" : "Property" }
+"Some ${Resource}" => { "Fn::Join" : [ "" , "Some", { "Ref" : "Resource} ] }
+
+Bugs
+----------
+
