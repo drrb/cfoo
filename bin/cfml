@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+lib_path = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift lib_path unless $LOAD_PATH.include? lib_path
+require 'cfml'
+
+if ARGV.empty?
+    STDERR.puts "Usage: #{File.basename $0} filename"
+    exit 1
+end
+
+filename = ARGV.shift
+
+project = Cfml::Project.new(".")
+processor = Cfml::Processor.new(project)
+cfml = Cfml::Cfml.new(processor, STDOUT)
+
+cfml.process filename
