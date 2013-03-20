@@ -25,6 +25,7 @@ module Cfml
                         "apple",
                         "${orange}",
                         "large ${MelonType} melon",
+                        "${apples} and ${oranges}",
                         "${apple.color}"
                     ]}
                     before do
@@ -39,8 +40,13 @@ module Cfml
                         processor.process("myfile.yml")[2].should == {"Fn::Join" => [ "", [ "large ", { "Ref" => "MelonType" }, " melon" ] ] }
                     end
 
+                    it 'turns multiple references embedded in strings into single appended arrays' do
+                        expected = {"Fn::Join" => [ "", [ { "Ref" => "apples" }, " and ", { "Ref" => "oranges" } ] ] }
+                        processor.process("myfile.yml")[3].should == expected
+                    end
+
                     it 'turns attribute references into CloudFormation "GetAtt" maps' do
-                        processor.process("myfile.yml")[3].should == {"Fn::GetAtt" => ["apple", "color"]}
+                        processor.process("myfile.yml")[4].should == {"Fn::GetAtt" => ["apple", "color"]}
                     end
                 end
 

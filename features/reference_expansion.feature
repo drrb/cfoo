@@ -33,13 +33,15 @@ Feature: Expand EL References
         """
         content:
             /var/www/html: http://${DownloadHost}/website.tar.gz
+            /etc/puppet: https://github.com/${GithubAccount}/${RepoName}.git
         """
         When I process "reference.yml"
         Then the output should match JSON
         """
         {
             "content": {
-                "/var/www/html" : { "Fn::Join" : [ "", [ "http://", {"Ref" : "DownloadHost"}, "/website.tar.gz" ] ] }
+                "/var/www/html" : { "Fn::Join" : [ "", [ "http://", {"Ref" : "DownloadHost"}, "/website.tar.gz" ] ] },
+                "/etc/puppet" : { "Fn::Join" : [ "", [ "https://github.com/", {"Ref" : "GithubAccount"}, "/", {"Ref" : "RepoName"}, ".git" ] ] }
             }
         }
         """

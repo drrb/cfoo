@@ -7,7 +7,7 @@ end
 class String
     def expand_el
         case self
-        when /^\$\{.*\}$/
+        when /^\$\{[^}]*\}$/
             reference = sub /^\$\{(.*)\}$/, '\1'
             if reference.include? "."
                 { "Fn::GetAtt" => reference.split(".") }
@@ -15,11 +15,22 @@ class String
                 { "Ref" => reference }
             end
         when /\$\{.*\}/
-            parts = rpartition /\$\{.*\}/
+            parts = non_greedy_split /\$\{(.*?)\}/
             { "Fn::Join" => [ "", parts.expand_el ] }
         else
             self
         end
+    end
+
+    def non_greedy_split(regex)
+        parsing = self
+        parsed = []
+        until parsing.empty?
+            parts = parsing.rpartition regex
+            parsed = parts[1..2] + parsed
+            parsing = parts[0]
+        end
+        parts = parsed.reject {|e| e.empty?}
     end
 end
 
