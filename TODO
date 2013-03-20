@@ -1,5 +1,10 @@
 Features
 ----------
+Split project into modules (arbitrary logical components: e.g. VPC, Mail Server, Puppet)
+Split into resources/mappings/parameters/etc by putting templates into directories with those names
+Allow escaping of EL 
+Allow module references to remote templates (inc. Git repositories) (auto-included)
+Allow traditional JSON CloudFormation templates (including modules, splitting, etc)
 
 Bugs
 ----------
