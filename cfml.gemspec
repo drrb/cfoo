@@ -6,10 +6,12 @@ require 'cfml/version'
 Gem::Specification.new do |gem|
   gem.name          = "cfml"
   gem.version       = Cfml::VERSION
-  gem.authors       = ["TODO: Write your name"]
-  gem.email         = ["TODO: Write your email address"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.authors       = ["drrb"]
+  gem.email         = ["drrrrrrrrrrrb@gmail.com"]
+  gem.description   = "CloudFormation Markup Language"
+  gem.summary       = <<-EOF
+    Write your CloudFormation templates in a YAML-based markup language
+  EOF
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
