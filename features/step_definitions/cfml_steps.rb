@@ -11,7 +11,7 @@ Given(/^I have a file "(.*?)" containing$/) do |filename, content|
 end
 
 When(/^I process "(.*?)"$/) do |filename|
-    cfml.process(filename)    
+    cfoo.process(filename)    
 end
 
 Then(/^the output should match JSON$/) do |expected_json|
@@ -30,20 +30,20 @@ Then(/^the output should match JSON$/) do |expected_json|
     actual.should == expected
 end
 
-def cfml
-    @cfml ||= Cfml::Cfml.new(processor, stdout)
+def cfoo
+    @cfoo ||= Cfoo::Cfoo.new(processor, stdout)
 end
 
 def processor
-    @combiner ||= Cfml::Processor.new(project)
+    @combiner ||= Cfoo::Processor.new(project)
 end
 
 def project
-    @project ||= Cfml::Project.new(project_root)
+    @project ||= Cfoo::Project.new(project_root)
 end
 
 def project_root
-    mkdir_p(@project_root ||= "/tmp/cfml-cucumber-#{$$}").shift
+    mkdir_p(@project_root ||= "/tmp/cfoo-cucumber-#{$$}").shift
 end
 
 def stdout

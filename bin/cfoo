@@ -2,7 +2,7 @@
 
 lib_path = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift lib_path unless $LOAD_PATH.include? lib_path
-require 'cfml'
+require 'cfoo'
 
 if ARGV.empty?
     STDERR.puts "Usage: #{File.basename $0} filename"
@@ -11,8 +11,8 @@ end
 
 filename = ARGV.shift
 
-project = Cfml::Project.new(".")
-processor = Cfml::Processor.new(project)
-cfml = Cfml::Cfml.new(processor, STDOUT)
+project = Cfoo::Project.new(".")
+processor = Cfoo::Processor.new(project)
+cfoo = Cfoo::Cfoo.new(processor, STDOUT)
 
-cfml.process filename
+cfoo.process filename

@@ -1,5 +1,5 @@
-require "cfml/cfml"
-require "cfml/processor"
-require "cfml/project"
-require "cfml/version"
+require "cfoo/cfoo"
+require "cfoo/processor"
+require "cfoo/project"
+require "cfoo/version"
 

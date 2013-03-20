@@ -1,16 +1,18 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'cfml/version'
+require 'cfoo/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "cfml"
-  gem.version       = Cfml::VERSION
+  gem.name          = "cfoo"
+  gem.version       = Cfoo::VERSION
   gem.authors       = ["drrb"]
   gem.email         = ["drrrrrrrrrrrb@gmail.com"]
-  gem.description   = "CloudFormation Markup Language"
+  gem.description   = "Cfoo: CloudFormation master"
   gem.summary       = <<-EOF
-    Write your CloudFormation templates in a YAML-based markup language
+    Cfoo (pronounced 'sifu') allows you to write your CloudFormation templates in a
+    YAML-based markup language, and organise it into modules to make it easier to
+    maintain.
   EOF
   gem.homepage      = ""
 

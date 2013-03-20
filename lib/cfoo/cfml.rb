@@ -1,7 +1,7 @@
 require 'json'
 
-module Cfml
-    class Cfml
+module Cfoo
+    class Cfoo
         def initialize(processor, stdout)
             @processor, @stdout = processor, stdout
         end

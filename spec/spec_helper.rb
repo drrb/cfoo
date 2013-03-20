@@ -1,1 +1,1 @@
-require 'cfml'
+require 'cfoo'
