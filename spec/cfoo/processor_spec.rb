@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Cfml
+module Cfoo
     describe Processor do
 
         let(:project) { double('project') }

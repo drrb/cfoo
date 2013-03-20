@@ -48,7 +48,7 @@ class Hash
     end
 end
 
-module Cfml
+module Cfoo
     class Processor
         def initialize(project)
             @project = project

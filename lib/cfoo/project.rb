@@ -1,6 +1,6 @@
 require 'yaml'
 
-module Cfml
+module Cfoo
     class Project
         def initialize(project_root)
             @project_root = project_root
