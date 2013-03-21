@@ -5,6 +5,7 @@ Split into resources/mappings/parameters/etc by putting templates into directori
 Allow escaping of EL 
 Allow module references to remote templates (inc. Git repositories) (auto-included)
 Allow traditional JSON CloudFormation templates (including modules, splitting, etc)
+Disablable warnings about naming conventions
 
 Bugs
 ----------
