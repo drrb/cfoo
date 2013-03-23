@@ -1,17 +1,15 @@
-require 'json'
-
 module Cfoo
     class Cfoo
-        def initialize(processor, stdout)
-            @processor, @stdout = processor, stdout
+        def initialize(processor, renderer, stdout)
+            @processor, @renderer, @stdout = processor, renderer, stdout
         end
 
         def process(filename)
-            @stdout.puts(JSON.pretty_unparse @processor.process(filename))
+            @stdout.puts(@renderer.render @processor.process(filename))
         end
 
         def build_project
-            @stdout.puts(JSON.pretty_unparse @processor.process_all)
+            @stdout.puts(@renderer.render @processor.process_all)
         end
     end
 end

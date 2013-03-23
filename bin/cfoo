@@ -14,7 +14,8 @@ filename = ARGV.shift
 file_system = Cfoo::FileSystem.new(".")
 project = Cfoo::Project.new(file_system)
 processor = Cfoo::Processor.new(project)
-cfoo = Cfoo::Cfoo.new(processor, STDOUT)
+renderer = Cfoo::Renderer.new
+cfoo = Cfoo::Cfoo.new(processor, renderer, STDOUT)
 
 if filename
     cfoo.process filename

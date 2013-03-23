@@ -54,11 +54,15 @@ def resolve_file(filename)
 end
 
 def cfoo
-    @cfoo ||= Cfoo::Cfoo.new(processor, stdout)
+    @cfoo ||= Cfoo::Cfoo.new(processor, renderer, stdout)
 end
 
 def processor
-    @combiner ||= Cfoo::Processor.new(project)
+    @processor ||= Cfoo::Processor.new(project)
+end
+
+def renderer
+    @renderer ||= Cfoo::Renderer.new
 end
 
 def project
