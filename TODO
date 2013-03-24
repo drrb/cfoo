@@ -6,11 +6,13 @@ Allow escaping of EL
 Allow module references to remote templates (inc. Git repositories) (auto-included)
 Allow traditional JSON CloudFormation templates (including modules, splitting, etc)
 Disablable warnings about naming conventions
+Better errors when parsing fails
+EL shorthand for FindInMap
+EL shorthand for AWS variables (e.g. { "Res" : "AWS::StackId" } ) 
 
 Tests
 ----------
-Exploratory testing of module functionality
 
 Bugs
 ----------
-
+Attempts to parse all files in modules (not just JSON or YAML ones)
