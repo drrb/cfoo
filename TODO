@@ -9,9 +9,11 @@ Disablable warnings about naming conventions
 Better errors when parsing fails
 EL shorthand for FindInMap
 EL shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 
+Convert false in YAML to "false" in JSON
 
 Tests
 ----------
 
 Bugs
 ----------
+Can't use EL in a shorthand YAML list (e.g. "[ ${something} ]" needs to be " - ${something}")
