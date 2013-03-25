@@ -8,7 +8,7 @@ Feature: Expand EL Reference Atributes
         """
         EntryPoint:
             Description: IP address of the Bastion Host
-            Value: ${BastionHost.PublicIp}
+            Value: $(BastionHost.PublicIp)
         """
         When I process "outputs.yml"
         Then the output should match JSON
@@ -26,7 +26,7 @@ Feature: Expand EL Reference Atributes
         """
         WebSite:
             Description: URL of the website
-            Value: http://${PublicElasticLoadBalancer.DNSName}/index.html
+            Value: http://$(PublicElasticLoadBalancer.DNSName)/index.html
         """
         When I process "outputs.yml"
         Then the output should match JSON

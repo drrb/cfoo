@@ -7,10 +7,10 @@ Feature: Expand EL References
         Given I have a file "reference.yml" containing
         """
         Server:
-            InstanceType: ${InstanceType}
+            InstanceType: $(InstanceType)
             SecurityGroups:
                 - sg-123456
-                - ${SshSecurityGroup}
+                - $(SshSecurityGroup)
                 - sg-987654
         """
         When I process "reference.yml"
@@ -32,8 +32,8 @@ Feature: Expand EL References
         Given I have a file "reference.yml" containing
         """
         content:
-            /var/www/html: http://${DownloadHost}/website.tar.gz
-            /etc/puppet: https://github.com/${GithubAccount}/${RepoName}.git
+            /var/www/html: http://$(DownloadHost)/website.tar.gz
+            /etc/puppet: https://github.com/$(GithubAccount)/$(RepoName).git
         """
         When I process "reference.yml"
         Then the output should match JSON

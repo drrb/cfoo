@@ -23,10 +23,10 @@ module Cfoo
                 context "in an array" do
                     let(:input_array) {[
                         "apple",
-                        "${orange}",
-                        "large ${MelonType} melon",
-                        "${apples} and ${oranges}",
-                        "${apple.color}"
+                        "$(orange)",
+                        "large $(MelonType) melon",
+                        "$(apples) and $(oranges)",
+                        "$(apple.color)"
                     ]}
                     before do
                         project.should_receive(:parse_file).with("myfile.yml").and_return(input_array)
@@ -51,7 +51,7 @@ module Cfoo
                 end
 
                 context "in a map" do
-                    let(:input_map) { { "IpAddress" => "${IpAddress}", "Website URL" => "http://${Hostname}/index.html" } }
+                    let(:input_map) { { "IpAddress" => "$(IpAddress)", "Website URL" => "http://$(Hostname)/index.html" } }
                     before do
                         project.should_receive(:parse_file).with("myfile.yml").and_return(input_map)
                     end
@@ -66,7 +66,7 @@ module Cfoo
                 end
 
                 context "in a complex data structure" do
-                    let(:input_map) { { "AvailabilityZones" => ["${PublicSubnetAz}"], "URLs" => ["http://${Hostname}/index.html"] } }
+                    let(:input_map) { { "AvailabilityZones" => ["$(PublicSubnetAz)"], "URLs" => ["http://$(Hostname)/index.html"] } }
                     before do
                         project.should_receive(:parse_file).with("myfile.yml").and_return(input_map)
                     end

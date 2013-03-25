@@ -16,4 +16,3 @@ Tests
 
 Bugs
 ----------
-Can't use EL in a shorthand YAML list (e.g. "[ ${something} ]" needs to be " - ${something}")
