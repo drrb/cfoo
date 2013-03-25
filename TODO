@@ -15,4 +15,3 @@ Tests
 
 Bugs
 ----------
-Attempts to parse all files in modules (not just JSON or YAML ones)

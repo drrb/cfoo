@@ -7,7 +7,7 @@ module Cfoo
         let(:project) { Project.new(file_system) }
         describe '#modules' do
             it 'lists the directories in the "modules" folder of the project' do
-                file_system.should_receive(:list_relative).with("modules").and_return ["a", "b", "c"]
+                file_system.should_receive(:glob_relative).with("modules/*").and_return ["a", "b", "c"]
                 project.modules.should == ["a", "b", "c"].map {|e| Module.new("modules/#{e}", file_system) }
             end
         end

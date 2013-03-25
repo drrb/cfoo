@@ -14,12 +14,12 @@ module Cfoo
             YAML.load_file(resolve_file file_name)
         end
 
-        def list_relative(path)
-            files = list(path).map {|f| File.basename f}
-            files.map do |file|
-                File.join(path, file)
+        def glob_relative(path)
+            absolute_files = Dir.glob(resolve_file path)
+            absolute_files.map do |file|
+                file.gsub(@project_root + '/', '')
             end
-        end|
+        end
 
         def list(path)
             Dir.glob("#{resolve_file path}/*")

@@ -25,13 +25,22 @@ module Cfoo
             end
         end
 
-        describe "#list_relative" do
+        describe "#glob_relative" do
             it "returns relative path of files, resolved relative to project root" do
                 files = %w[a b c].map {|file| File.join(project_root, "modules", file) }
                 mkdir File.join(project_root, "modules")
                 touch files 
 
-                file_system.list_relative("modules").should == files.map {|f| f.gsub(project_root + "/", "")}
+                relative_files = files.map {|f| f.gsub(project_root + "/", "")}
+
+                file_system.glob_relative("modules/*").should == relative_files
+            end
+            it "expands globs" do
+                files = %w[a.txt b.json c.yml].map {|file| File.join(project_root, "modules", file) }
+                mkdir File.join(project_root, "modules")
+                touch files 
+
+                file_system.glob_relative("modules/*.yml").should == ["modules/c.yml"]
             end
         end
     end

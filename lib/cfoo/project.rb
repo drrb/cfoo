@@ -11,7 +11,7 @@ module Cfoo
         end
 
         def modules
-            module_dirs = @file_system.list_relative("modules")
+            module_dirs = @file_system.glob_relative("modules/*")
             module_dirs.map do |dir|
                 Module.new(dir, @file_system)
             end

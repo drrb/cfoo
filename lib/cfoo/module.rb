@@ -7,7 +7,7 @@ module Cfoo
         end
 
         def files
-            @file_system.list_relative(dir)
+            @file_system.glob_relative("#{dir}/*.yml")
         end
 
         def ==(other)
