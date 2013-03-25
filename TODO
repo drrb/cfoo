@@ -8,7 +8,7 @@ Allow traditional JSON CloudFormation templates (including modules, splitting, e
 Disablable warnings about naming conventions
 Better errors when parsing fails
 EL shorthand for FindInMap
-EL shorthand for AWS variables (e.g. { "Res" : "AWS::StackId" } ) 
+EL shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 
 
 Tests
 ----------
