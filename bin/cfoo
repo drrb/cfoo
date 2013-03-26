@@ -13,7 +13,8 @@ filename = ARGV.shift
 
 file_system = Cfoo::FileSystem.new(".")
 project = Cfoo::Project.new(file_system)
-processor = Cfoo::Processor.new(project)
+parser = Cfoo::Parser.new(file_system)
+processor = Cfoo::Processor.new(parser, project)
 renderer = Cfoo::Renderer.new
 cfoo = Cfoo::Cfoo.new(processor, renderer, STDOUT)
 

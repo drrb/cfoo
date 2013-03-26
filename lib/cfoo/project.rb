@@ -6,10 +6,6 @@ module Cfoo
             @file_system = file_system 
         end
 
-        def parse_file(file_name)
-            @file_system.parse_file(file_name)
-        end
-
         def modules
             module_dirs = @file_system.glob_relative("modules/*")
             module_dirs.map do |dir|

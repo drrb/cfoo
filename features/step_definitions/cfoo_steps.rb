@@ -58,7 +58,11 @@ def cfoo
 end
 
 def processor
-    @processor ||= Cfoo::Processor.new(project)
+    @processor ||= Cfoo::Processor.new(parser, project)
+end
+
+def parser
+    @parser ||= Cfoo::Parser.new(file_system)
 end
 
 def renderer
