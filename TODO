@@ -1,6 +1,5 @@
 Features
 ----------
-Convert false in YAML to "false" in JSON
 Allow escaping of EL 
 EL shorthand for FindInMap
 EL shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 

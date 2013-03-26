@@ -12,6 +12,7 @@ module Cfoo
                     parser.parse_file("myfile.yml").should == [1, 2, 3]
                 end
             end
+
             context "when processing a normal map" do
                 it "returns it" do
                     file_system.should_receive(:parse_file).with("myfile.yml").and_return({"a" => "b"})
@@ -19,72 +20,79 @@ module Cfoo
                 end
             end
 
-            context "when parsing boolean literals" do
-                it "turns them into strings" do
-                    #file_system.should_receive(:parse_file).with("myfile.yml").and_return(false)
-                    #parser.parse_file("myfile.yml").should == "false"
+            context "when parsing integer literals" do
+                it "returns them" do
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return(1)
+                    parser.parse_file("myfile.yml").should == 1
                 end
             end
 
-            context "when presented with EL" do
+            context "when parsing boolean literals" do
+                it "turns false into a string" do
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return(false)
+                    parser.parse_file("myfile.yml").should == "false"
+                end
+                it "turns true into a string" do
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return(true)
+                    parser.parse_file("myfile.yml").should == "true"
+                end
+            end
+
+            context "when parsing EL" do
+                it 'turns simple references into CloudFormation "Ref" maps' do
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(orange)")
+                    parser.parse_file("myfile.yml").should == {"Ref" => "orange"}
+                end
+
+                it 'turns references embedded in strings into appended arrays' do
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("large $(MelonType) melon")
+                    parser.parse_file("myfile.yml").should == {"Fn::Join" => [ "", [ "large ", { "Ref" => "MelonType" }, " melon" ] ] }
+                end
+
+                it 'turns multiple references embedded in strings into single appended arrays' do
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(apples) and $(oranges)")
+                    expected = {"Fn::Join" => [ "", [ { "Ref" => "apples" }, " and ", { "Ref" => "oranges" } ] ] }
+                    parser.parse_file("myfile.yml").should == expected
+                end
+
+                it 'turns attribute references into CloudFormation "GetAtt" maps' do
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(apple.color)")
+                    parser.parse_file("myfile.yml").should == {"Fn::GetAtt" => ["apple", "color"]}
+                end
+
                 context "in an array" do
-                    let(:input_array) {[
-                        "apple",
-                        "$(orange)",
-                        "large $(MelonType) melon",
-                        "$(apples) and $(oranges)",
-                        "$(apple.color)"
-                    ]}
-                    before do
-                        file_system.should_receive(:parse_file).with("myfile.yml").and_return(input_array)
-                    end
-
-                    it 'turns simple references into CloudFormation "Ref" maps' do
-                        parser.parse_file("myfile.yml")[1].should == {"Ref" => "orange"}
-                    end
-
-                    it 'turns references embedded in strings into appended arrays' do
-                        parser.parse_file("myfile.yml")[2].should == {"Fn::Join" => [ "", [ "large ", { "Ref" => "MelonType" }, " melon" ] ] }
-                    end
-
-                    it 'turns multiple references embedded in strings into single appended arrays' do
-                        expected = {"Fn::Join" => [ "", [ { "Ref" => "apples" }, " and ", { "Ref" => "oranges" } ] ] }
-                        parser.parse_file("myfile.yml")[3].should == expected
-                    end
-
-                    it 'turns attribute references into CloudFormation "GetAtt" maps' do
-                        parser.parse_file("myfile.yml")[4].should == {"Fn::GetAtt" => ["apple", "color"]}
+                    it "expands elements' EL" do
+                        file_system.should_receive(:parse_file).with("myfile.yml").and_return [ "$(orange)" ]
+                        parser.parse_file("myfile.yml").should == [{"Ref" => "orange"}]
                     end
                 end
 
                 context "in a map" do
-                    let(:input_map) { { "IpAddress" => "$(IpAddress)", "Website URL" => "http://$(Hostname)/index.html" } }
-                    before do
-                        file_system.should_receive(:parse_file).with("myfile.yml").and_return(input_map)
-                    end
-
-                    it 'turns simple references into CloudFormation "Ref" maps' do
-                        parser.parse_file("myfile.yml")["IpAddress"].should == {"Ref" => "IpAddress"}
-                    end
-
-                    it 'turns references embedded in strings into appended arrays' do
-                        parser.parse_file("myfile.yml")["Website URL"].should == {"Fn::Join" => [ "", [ "http://", { "Ref" => "Hostname" }, "/index.html" ] ] }
+                    it "expands values' EL" do
+                        file_system.should_receive(:parse_file).with("myfile.yml").and_return({ "IpAddress" => "$(IpAddress)" })
+                        parser.parse_file("myfile.yml").should == {"IpAddress" => { "Ref" => "IpAddress"}}
                     end
                 end
 
                 context "in a complex data structure" do
-                    let(:input_map) { { "AvailabilityZones" => ["$(PublicSubnetAz)"], "URLs" => ["http://$(Hostname)/index.html"] } }
-                    before do
+                    it "expands EL deeply" do
+                        input_map = {
+                            "AvailabilityZones" => ["$(PublicSubnetAz)"],
+                            "URLs" => ["http://$(Hostname)/index.html"] 
+                        }
+                        expected_output = {
+                            "AvailabilityZones" => [ {"Ref" => "PublicSubnetAz"}],
+                            "URLs" => [{"Fn::Join" => [ "", [ "http://", { "Ref" => "Hostname" }, "/index.html" ] ] }] 
+                        }
                         file_system.should_receive(:parse_file).with("myfile.yml").and_return(input_map)
+                        parser.parse_file("myfile.yml").should == expected_output
                     end
-
-                    it 'turns simple references into CloudFormation "Ref" maps' do
-                        parser.parse_file("myfile.yml")["AvailabilityZones"][0].should == {"Ref" => "PublicSubnetAz"}
-                    end
-
-                    it 'turns references embedded in strings into appended arrays' do
-                        parser.parse_file("myfile.yml")["URLs"][0].should == {"Fn::Join" => [ "", [ "http://", { "Ref" => "Hostname" }, "/index.html" ] ] }
-                    end
+                end
+            end
+            context "when presented with an unknown object" do
+                it "raises an error" do
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return(/a regex/)
+                    expect {parser.parse_file("myfile.yml")}.to raise_error Parser::ElParseError
                 end
             end
         end
