@@ -60,6 +60,11 @@ module Cfoo
                     parser.parse_file("myfile.yml").should == {"Fn::GetAtt" => ["apple", "color"]}
                 end
 
+                it 'turns EL map references into CloudFormation "FindInMap" maps' do
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(fruit.apple[color])")
+                    parser.parse_file("myfile.yml").should == {"Fn::FindInMap" => ["fruit", "apple", "color"]}
+                end
+
                 it 'leaves escaped EL alone' do
                     file_system.should_receive(:parse_file).with("myfile.yml").and_return("\\$(apple.color) apple")
                     parser.parse_file("myfile.yml").should == "$(apple.color) apple"

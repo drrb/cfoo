@@ -37,7 +37,13 @@ class ElToken
             @string.sub /\A\\/, ''
         else
             reference = @string.sub /^\$\((.*)\)$/, '\1'
-            if reference.include? "."
+            case reference
+            when /\A.*[.].*\[.*\]\z/
+                map, key_value = reference.split('.')[0..1]
+                key, boxed_value = key_value.partition(/\[.*\]/)[0..1]
+                value = boxed_value.sub(/\A\[(.*)\]\z/, '\1')
+                { "Fn::FindInMap" => [map, key, value] }
+            when /\A.*[.].*\z/
                 { "Fn::GetAtt" => reference.split(".") }
             else
                 { "Ref" => reference }

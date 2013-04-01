@@ -1,14 +1,14 @@
-Feature: Expand EL Attribute References
+Feature: Expand EL Mapping References
     As a CloudFormation user
-    I want to use an expression language as a shorthand for references
+    I want to use an expression language as a shorthand for mapping references
     So that I my templates are easier to read
 
-    Scenario: Attribute expansion
+    Scenario: Map reference expansion
         Given I have a file "outputs.yml" containing
         """
         EntryPoint:
             Description: IP address of the Bastion Host
-            Value: $(BastionHost.PublicIp)
+            Value: $(SubnetConfig.VPC[CIDR])
         """
         When I process "outputs.yml"
         Then the output should match JSON
@@ -16,17 +16,17 @@ Feature: Expand EL Attribute References
         {
             "EntryPoint" : {
                 "Description" : "IP address of the Bastion Host",
-                "Value" :  { "Fn::GetAtt" : [ "BastionHost", "PublicIp" ]}
+                "Value" :  { "Fn::FindInMap" : [ "SubnetConfig", "VPC", "CIDR" ]}
             }
         }
         """
 
-    Scenario: Embedded attribute expansion
+    Scenario: Embedded map reference expansion
         Given I have a file "outputs.yml" containing
         """
         WebSite:
             Description: URL of the website
-            Value: http://$(PublicElasticLoadBalancer.DNSName)/index.html
+            Value: http://$(Network.Dns[LoadBalancerDnsName])/index.html
         """
         When I process "outputs.yml"
         Then the output should match JSON
@@ -34,7 +34,7 @@ Feature: Expand EL Attribute References
         {
             "WebSite" : {                                                                                                                                            
                 "Description" : "URL of the website",
-                "Value" :  { "Fn::Join" : [ "", [ "http://", { "Fn::GetAtt" : [ "PublicElasticLoadBalancer", "DNSName" ]}, "/index.html"]]}
+                "Value" :  { "Fn::Join" : [ "", [ "http://", { "Fn::FindInMap" : [ "Network", "Dns", "LoadBalancerDnsName" ]}, "/index.html"]]}
             }
         }
         """
