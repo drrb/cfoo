@@ -17,3 +17,4 @@ Tests
 
 Bugs
 ----------
+Parsing fails for EL in EL (e.g. "$(Map.$(KeyName)[Value])"). Do we need a real parser?
