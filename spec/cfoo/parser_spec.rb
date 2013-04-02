@@ -38,39 +38,6 @@ module Cfoo
                 end
             end
 
-            context "when parsing a string" do
-                it 'turns simple EL references into CloudFormation "Ref" maps' do
-                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(orange)")
-                    parser.parse_file("myfile.yml").should == {"Ref" => "orange"}
-                end
-
-                it 'turns EL references embedded in strings into appended arrays' do
-                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("large $(MelonType) melon")
-                    parser.parse_file("myfile.yml").should == {"Fn::Join" => [ "", [ "large ", { "Ref" => "MelonType" }, " melon" ] ] }
-                end
-
-                it 'turns multiple EL references embedded in strings into single appended arrays' do
-                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(apples) and $(oranges)")
-                    expected = {"Fn::Join" => [ "", [ { "Ref" => "apples" }, " and ", { "Ref" => "oranges" } ] ] }
-                    parser.parse_file("myfile.yml").should == expected
-                end
-
-                it 'turns EL attribute references into CloudFormation "GetAtt" maps' do
-                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(apple.color)")
-                    parser.parse_file("myfile.yml").should == {"Fn::GetAtt" => ["apple", "color"]}
-                end
-
-                it 'turns EL map references into CloudFormation "FindInMap" maps' do
-                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(fruit.apple[color])")
-                    parser.parse_file("myfile.yml").should == {"Fn::FindInMap" => ["fruit", "apple", "color"]}
-                end
-
-                it 'leaves escaped EL alone' do
-                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("\\$(apple.color) apple")
-                    parser.parse_file("myfile.yml").should == "$(apple.color) apple"
-                end
-            end
-
             context "in an array" do
                 it "expands elements' EL" do
                     file_system.should_receive(:parse_file).with("myfile.yml").and_return [ "$(orange)" ]

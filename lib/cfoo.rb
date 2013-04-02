@@ -1,4 +1,5 @@
 require "cfoo/cfoo"
+require "cfoo/el_parser"
 require "cfoo/file_system"
 require "cfoo/module"
 require "cfoo/parser"
