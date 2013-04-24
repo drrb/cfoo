@@ -1,13 +1,13 @@
 Features
 ----------
 EL shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 
+Better errors when parsing fails
 Split project into modules (arbitrary logical components: e.g. VPC, Mail Server, Puppet)
+Split into resources/mappings/parameters/etc by putting templates into directories with those names
 Allow directory for raw templates
 Allow traditional JSON CloudFormation templates (including modules, splitting, etc)
-Split into resources/mappings/parameters/etc by putting templates into directories with those names
-Allow module references to remote templates (inc. Git repositories) (auto-included)
-Better errors when parsing fails
 Disablable warnings about naming conventions
+Allow module references to remote templates (inc. Git repositories) (auto-included)
 Allow rendering only part of the project (in case part of the infrastructure already exists)
 Render templates with ERB to allow extra flexibility/substitution
 Resolve EL and complain/fail if targets don't exist
