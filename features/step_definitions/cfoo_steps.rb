@@ -78,7 +78,9 @@ def file_system
 end
 
 def project_root
-    mkdir_p(@project_root ||= "/tmp/cfoo-cucumber-#{$$}").shift
+    @project_root ||= "/tmp/cfoo-cucumber-#{$$}"
+    mkdir_p(@project_root)
+    @project_root
 end
 
 def stdout
