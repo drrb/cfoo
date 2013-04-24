@@ -14,6 +14,7 @@ Feature: Expand EL Mapping References
         Then the output should match JSON
         """
         {
+            "AWSTemplateFormatVersion" : "2010-09-09",
             "EntryPoint" : {
                 "Description" : "IP address of the Bastion Host",
                 "Value" :  { "Fn::FindInMap" : [ "SubnetConfig", "VPC", "CIDR" ]}
@@ -32,6 +33,7 @@ Feature: Expand EL Mapping References
         Then the output should match JSON
         """
         {
+            "AWSTemplateFormatVersion" : "2010-09-09",
             "WebSite" : {                                                                                                                                            
                 "Description" : "URL of the website",
                 "Value" :  { "Fn::Join" : [ "", [ "http://", { "Fn::FindInMap" : [ "Network", "Dns", "LoadBalancerDnsName" ]}, "/index.html"]]}

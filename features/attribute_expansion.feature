@@ -14,6 +14,7 @@ Feature: Expand EL Attribute References
         Then the output should match JSON
         """
         {
+            "AWSTemplateFormatVersion" : "2010-09-09",
             "EntryPoint" : {
                 "Description" : "IP address of the Bastion Host",
                 "Value" :  { "Fn::GetAtt" : [ "BastionHost", "PublicIp" ]}
@@ -32,6 +33,7 @@ Feature: Expand EL Attribute References
         Then the output should match JSON
         """
         {
+            "AWSTemplateFormatVersion" : "2010-09-09",
             "WebSite" : {                                                                                                                                            
                 "Description" : "URL of the website",
                 "Value" :  { "Fn::Join" : [ "", [ "http://", { "Fn::GetAtt" : [ "PublicElasticLoadBalancer", "DNSName" ]}, "/index.html"]]}

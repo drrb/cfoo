@@ -17,6 +17,7 @@ Feature: Expand EL References
         Then the output should match JSON
         """
         {
+            "AWSTemplateFormatVersion" : "2010-09-09",
             "Server" : {
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "SecurityGroups" : [
@@ -39,6 +40,7 @@ Feature: Expand EL References
         Then the output should match JSON
         """
         {
+            "AWSTemplateFormatVersion" : "2010-09-09",
             "content": {
                 "/var/www/html" : { "Fn::Join" : [ "", [ "http://", {"Ref" : "DownloadHost"}, "/website.tar.gz" ] ] },
                 "/etc/puppet" : { "Fn::Join" : [ "", [ "https://github.com/", {"Ref" : "GithubAccount"}, "/", {"Ref" : "RepoName"}, ".git" ] ] }

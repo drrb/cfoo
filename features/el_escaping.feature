@@ -13,6 +13,7 @@ Feature: EL escaping
         Then the output should match JSON
         """
         {
+            "AWSTemplateFormatVersion" : "2010-09-09",
             "EntryPoint" : {
                 "Value" : "$(BastionHost.PublicIp)"
             }

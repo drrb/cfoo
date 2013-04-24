@@ -19,19 +19,20 @@ module Cfoo
             @parser, @project = parser, project
         end
 
-        def process(filename)
-            @parser.parse_file filename
+        def process(*filenames)
+            project_map = { "AWSTemplateFormatVersion" => "2010-09-09" }
+            filenames.each do |filename|
+                module_map = @parser.parse_file filename
+                project_map = project_map.deep_merge module_map
+            end
+            project_map
         end
 
         def process_all
-            project_map = { "AWSTemplateFormatVersion" => "2010-09-09" }
-            @project.modules.each do |mod|
-                mod.files.each do |file|
-                    module_map = process file
-                    project_map = project_map.deep_merge module_map
-                end
+            project_files = @project.modules.inject([]) do |all_files, mod|
+                all_files += mod.files
             end
-            project_map
+            process *project_files
         end
     end
 end

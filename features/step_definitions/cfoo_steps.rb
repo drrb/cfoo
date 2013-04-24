@@ -13,8 +13,13 @@ Given /^I have a file "(.*?)" containing$/ do |filename, content|
     write_file(filename, content)
 end
 
-When(/^I process "(.*?)"$/) do |filename|
+When /^I process "(.*?)"$/  do |filename|
     cfoo.process(filename)    
+end
+
+#TODO: can we use varargs?
+When /^I process files "(.*?)"(?:(?:,| and) "(.*?)")$/  do |filename_1, filename_2|
+    cfoo.process(filename_1, filename_2)
 end
 
 When /^I build the project$/ do

@@ -6,14 +6,18 @@ Feature: Convert YAML to JSON
     Scenario: Basic array conversion
         Given I have a file "list.yml" containing
         """
-        - One
-        - 2
-        - "3"
+        list:
+            - One
+            - 2
+            - "3"
         """
         When I process "list.yml"
         Then the output should match JSON
         """
-        [ "One", 2, "3" ]
+        {
+            "AWSTemplateFormatVersion" : "2010-09-09",
+            "list" : ["One", 2, "3"]
+        }
         """
 
     Scenario: Basic map conversion
@@ -27,9 +31,10 @@ Feature: Convert YAML to JSON
         Then the output should match JSON
         """
         {
-           "1" : "One",
-           "2" : "Two",
-           "3" : "Three"
+            "AWSTemplateFormatVersion" : "2010-09-09",
+            "1" : "One",
+            "2" : "Two",
+            "3" : "Three"
         }
         """
 
@@ -49,6 +54,7 @@ Feature: Convert YAML to JSON
         Then the output should match JSON
         """
         {
+            "AWSTemplateFormatVersion" : "2010-09-09",
             "Fruit": [
                 { "Apples": [ "red", "green" ] },
                 "Bananas",

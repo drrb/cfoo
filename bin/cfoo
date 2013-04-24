@@ -4,12 +4,12 @@ lib_path = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift lib_path unless $LOAD_PATH.include? lib_path
 require 'cfoo'
 
-if (1..2).include? ARGV.size
-    STDERR.puts "Usage: #{File.basename $0} filename"
+if ARGV.include? "--help"
+    STDERR.puts "Usage: #{File.basename $0} [filename...]"
     exit 1
 end
 
-filename = ARGV.shift
+filenames = ARGV
 
 file_system = Cfoo::FileSystem.new(".")
 project = Cfoo::Project.new(file_system)
@@ -18,8 +18,8 @@ processor = Cfoo::Processor.new(parser, project)
 renderer = Cfoo::Renderer.new
 cfoo = Cfoo::Cfoo.new(processor, renderer, STDOUT)
 
-if filename
-    cfoo.process filename
-else
+if filenames.empty?
     cfoo.build_project
+else
+    cfoo.process *filenames
 end

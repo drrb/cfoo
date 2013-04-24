@@ -8,9 +8,20 @@ module Cfoo
         let(:processor) { Processor.new(parser, project) }
 
         describe "#process" do
-            it "parses the input" do
-                parser.should_receive(:parse_file).with("myfile.yml").and_return [1,2,3]
-                processor.process("myfile.yml")
+            it "parses the specified files" do
+                parser.should_receive(:parse_file).with("app.yml").and_return({"Resources" => { "AppServer" => { "Type" => "EC2Instance" } } })
+                parser.should_receive(:parse_file).with("db.yml").and_return({"Resources" => { "DbServer" => { "Type" => "EC2Instance" } } })
+                parser.should_receive(:parse_file).with("network.yml").and_return({"Parameters" => { "LoadBalancerIpAddress" => "10.0.0.51" } })
+                processor.process("app.yml", "db.yml", "network.yml").should == {
+                    "AWSTemplateFormatVersion" => "2010-09-09",
+                    "Parameters" => {
+                        "LoadBalancerIpAddress" => "10.0.0.51"
+                    },
+                    "Resources" => {
+                        "AppServer" => { "Type" => "EC2Instance" },
+                        "DbServer" => { "Type" => "EC2Instance" }
+                    }
+                }
             end
         end
 

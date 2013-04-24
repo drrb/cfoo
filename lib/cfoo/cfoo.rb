@@ -4,8 +4,8 @@ module Cfoo
             @processor, @renderer, @stdout = processor, renderer, stdout
         end
 
-        def process(filename)
-            @stdout.puts(@renderer.render @processor.process(filename))
+        def process(*filenames)
+            @stdout.puts(@renderer.render @processor.process(*filenames))
         end
 
         def build_project
