@@ -2,6 +2,62 @@
 
 Write your CloudFormation templates in a YAML-based markup language
 
+## Installation
+
+    $ gem install cfoo
+
+## Usage
+
+Snippet from a CloudFormation template (based on [this example](https://s3.amazonaws.com/cloudformation-templates-us-east-1/Rails_Single_Instance.template)):
+
+```json
+"Properties": {
+  "ImageId" : { "Fn::FindInMap" : [ "AWSRegion2AMI", { "Ref" : "AWS::Region" }, "AMI" ] },
+  "InstanceType"   : { "Ref" : "InstanceType" },
+  "SecurityGroups" : [ {"Ref" : "FrontendGroup"} ],
+  "KeyName"        : { "Ref" : "KeyName" },
+  "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+    "#!/bin/bash -v\n",
+    "yum update -y aws-cfn-bootstrap\n",
+
+    "function error_exit\n",
+    "{\n",
+    "  /opt/aws/bin/cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WaitHandle" }, "'\n",
+    "  exit 1\n",
+    "}\n",
+
+    "/opt/aws/bin/cfn-init -s ", { "Ref" : "AWS::StackId" }, " -r WebServer ",
+    "    --region ", { "Ref" : "AWS::Region" }, " || error_exit 'Failed to run cfn-init'\n",
+
+    "/opt/aws/bin/cfn-signal -e 0 -r \"cfn-init complete\" '", { "Ref" : "WaitHandle" }, "'\n"
+  ]]}}        
+}
+```
+
+Equivalent Cfoo template snippet:
+
+```yaml
+Properties:
+  ImageId : $(AWSRegion2AMI[$(AWS::Region)][AMI])
+  InstanceType: $(InstanceType)
+  SecurityGroups: 
+     - $(FrontendGroup)
+  KeyName: $(KeyName)
+  UserData: !base64 |
+    #!/bin/bash -v
+    yum update -y aws-cfn-bootstrap
+
+    function error_exit
+    {
+      /opt/aws/bin/cfn-signal -e 1 -r "$1" '$(WaitHandle)'
+      exit 1
+    }
+
+    /opt/aws/bin/cfn-init -s $(AWS::StackId) -r WebServer --region $(AWS::Region) || error_exit 'Failed to run cfn-init'
+
+    /opt/aws/bin/cfn-signal -e 0 -r "cfn-init completed" '$(WaitHandle)'
+```
+
 ## Goals
 
 ### Primary Goals
@@ -25,24 +81,6 @@ Cfoo does not (yet) aim to:
 
 - provide commandline utilities for interacting directly with CloudFormation (it just generates the templates for now)
 - resolve/validate references (the CloudFormation API already does this)
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'cfoo'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install cfoo
-
-## Usage
-
-TODO: Write usage instructions here
 
 ## Contributing
 
