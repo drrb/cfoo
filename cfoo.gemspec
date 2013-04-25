@@ -8,6 +8,7 @@ Gem::Specification.new do |gem|
   gem.version       = Cfoo::VERSION
   gem.authors       = ["drrb"]
   gem.email         = ["drrrrrrrrrrrb@gmail.com"]
+  gem.license       = "GPL-3"
   gem.description   = "Cfoo: CloudFormation master"
   gem.summary       = <<-EOF
     Cfoo (pronounced 'sifu') allows you to write your CloudFormation templates in a
