@@ -14,10 +14,13 @@ Gem::Specification.new do |gem|
     YAML-based markup language, and organise it into modules to make it easier to
     maintain.
   EOF
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/drrb/cfoo"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
+
+  spec.add_development_dependency "bundler", "~> 1.3"
+  spec.add_development_dependency "rake"
 end
