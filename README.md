@@ -4,9 +4,15 @@ Write your CloudFormation templates in a YAML-based markup language
 
 ## Installation
 
+Cfoo can be installed as a Ruby Gem
+
     $ gem install cfoo
 
 ## Usage
+
+Process a Cfoo template from the command line
+
+    $ cfoo mycfootemplate.yml
 
 Snippet from a CloudFormation template (based on [this example](https://s3.amazonaws.com/cloudformation-templates-us-east-1/Rails_Single_Instance.template)):
 
