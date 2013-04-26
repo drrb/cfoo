@@ -11,6 +11,10 @@ module Cfoo
         end
 
         def parse_file(file_name)
+            #TODO: this only works in Ruby 1.9+
+            YAML.add_builtin_type "base64" do |tag,value|
+              { "Fn::Base64" => value }
+            end 
             YAML.load_file(resolve_file file_name)
         end
 

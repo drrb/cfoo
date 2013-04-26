@@ -2,7 +2,6 @@ Features
 ----------
 EL shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 
 Better map shorthand, for when one map key is a reference (e.g. { "Fn::FindInMap": [ "AWSRegion2AMI", { "Ref" : "AWS::Region" }, "AMI" ] })
-AWS Base64 function as YAML custom data-type (e.g. !base64: "mystring" => { "Fn::Base64" : "mystring" }
 Better errors when parsing fails
 Split project into modules (arbitrary logical components: e.g. VPC, Mail Server, Puppet)
 Split into resources/mappings/parameters/etc by putting templates into directories with those names

@@ -63,6 +63,13 @@ module Cfoo
                     expect {file_system.parse_file("bad.yml")}.to raise_error
                 end
             end
+            context "when the YAML contains a base64-typed string" do
+                it "wraps it in an AWS base64 function-call" do
+                    write "#{project_root}/b64.yml", "!!base64 myencodedstring"
+
+                    file_system.parse_file("b64.yml").should == {"Fn::Base64" => "myencodedstring"}
+                end
+            end
         end
 
         def write(file, content)
