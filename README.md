@@ -10,9 +10,11 @@ Cfoo can be installed as a Ruby Gem
 
 ## Usage
 
-Process a Cfoo template from the command line
+Process some Cfoo templates from the command line
 
-    $ cfoo mycfootemplate.yml
+    $ cfoo  web-server-template.yml database_template.yml
+
+## Comparison with standard CloudFormation templates
 
 Snippet from a CloudFormation template (based on [this example](https://s3.amazonaws.com/cloudformation-templates-us-east-1/Rails_Single_Instance.template)):
 
@@ -44,12 +46,12 @@ Equivalent Cfoo template snippet:
 
 ```yaml
 Properties:
-  ImageId : $(AWSRegion2AMI[$(AWS::Region)][AMI])
+  ImageId : !!findinmap [ AWSRegion2AMI, $(AWS::Region), AMI ]
   InstanceType: $(InstanceType)
   SecurityGroups: 
      - $(FrontendGroup)
   KeyName: $(KeyName)
-  UserData: !base64 |
+  UserData: !!base64 |
     #!/bin/bash -v
     yum update -y aws-cfn-bootstrap
 
@@ -92,6 +94,7 @@ Cfoo does not (yet) aim to:
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+3. Make your changes (with tests please)
+4. Commit your changes (`git commit -am 'Add some feature'`)
+5. Push to the branch (`git push origin my-new-feature`)
+6. Create new Pull Request
