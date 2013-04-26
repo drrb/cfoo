@@ -63,8 +63,33 @@ module Cfoo
                     expect {file_system.parse_file("bad.yml")}.to raise_error
                 end
             end
-            context "when the YAML contains a base64-typed string" do
-                it "wraps it in an AWS base64 function-call" do
+            context "when the YAML contains a custom AWS datatype" do
+                it "wraps references in AWS Ref maps" do
+                    write "#{project_root}/ref.yml", "!!ref AWS::Region"
+
+                    file_system.parse_file("ref.yml").should == {"Ref" => "AWS::Region" }
+                end
+                it "wraps attribute references in AWS GetAtt maps" do
+                    write "#{project_root}/getattr.yml", "!!getatt [Object, Property]"
+
+                    file_system.parse_file("getattr.yml").should == {"Fn::GetAtt" => [ "Object", "Property" ] }
+                end
+                it "wraps joins in AWS Join function-calls" do
+                    write "#{project_root}/join.yml", "!!join ['', [a,b,c]]"
+
+                    file_system.parse_file("join.yml").should == {"Fn::Join" => [ "" , [ "a", "b", "c" ] ] }
+                end
+                it "wraps concatenations in AWS Join function-calls with empty strings" do
+                    write "#{project_root}/join.yml", "!!concat [a,b,c]"
+
+                    file_system.parse_file("join.yml").should == {"Fn::Join" => [ "" , [ "a", "b", "c" ] ] }
+                end
+                it "wraps map lookups in AWS FindInMap function-calls" do
+                    write "#{project_root}/findinmap.yml", "!!findinmap [Map, Key, Value]"
+
+                    file_system.parse_file("findinmap.yml").should == {"Fn::FindInMap" => [ "Map", "Key", "Value" ] }
+                end
+                it "wraps base64 strings in AWS Base64 function-calls" do
                     write "#{project_root}/b64.yml", "!!base64 myencodedstring"
 
                     file_system.parse_file("b64.yml").should == {"Fn::Base64" => "myencodedstring"}

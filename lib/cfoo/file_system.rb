@@ -11,7 +11,24 @@ module Cfoo
         end
 
         def parse_file(file_name)
-            #TODO: this only works in Ruby 1.9+
+            #TODO: these only work in Ruby 1.9+
+            #TODO: raise errors if "value" isn't the right type
+            #TODO: move these into a dedidated YAML parser
+            YAML.add_builtin_type "ref" do |tag,value|
+              { "Ref" => value }
+            end 
+            YAML.add_builtin_type "join" do |tag,value|
+              { "Fn::Join" => value }
+            end 
+            YAML.add_builtin_type "concat" do |tag,value|
+              { "Fn::Join" => ['', value] }
+            end 
+            YAML.add_builtin_type "getatt" do |tag,value|
+              { "Fn::GetAtt" => value }
+            end 
+            YAML.add_builtin_type "findinmap" do |tag,value|
+              { "Fn::FindInMap" => value }
+            end 
             YAML.add_builtin_type "base64" do |tag,value|
               { "Fn::Base64" => value }
             end 
