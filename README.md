@@ -1,5 +1,7 @@
 # Cfoo
 
+[![Build Status](https://travis-ci.org/drrb/cfoo.png?branch=master)](https://travis-ci.org/drrb/cfoo)
+
 Write your CloudFormation templates in a YAML-based markup language
 
 ## Installation
