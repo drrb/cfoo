@@ -21,7 +21,7 @@ module Cfoo
                 mkdir File.join(project_root, "modules")
                 touch files 
 
-                file_system.list("modules").should == files
+                file_system.list("modules").sort.should == files
             end
         end
 
@@ -33,7 +33,7 @@ module Cfoo
 
                 relative_files = files.map {|f| f.gsub(project_root + "/", "")}
 
-                file_system.glob_relative("modules/*").should == relative_files
+                file_system.glob_relative("modules/*").sort.should == relative_files
             end
             it "expands globs" do
                 files = %w[a.txt b.json c.yml].map {|file| File.join(project_root, "modules", file) }
