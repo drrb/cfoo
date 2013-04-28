@@ -1,4 +1,5 @@
 require 'cfoo/el_parser'
+require 'cfoo/yaml'
 
 class Object
     def expand_el
@@ -42,6 +43,29 @@ class Hash
             [ key, value.expand_el ]
         end]
     end
+end
+
+module YAML
+   class PrivateType
+      def expand_el
+         case type_id
+         when "ref"
+            { "Ref" => value.expand_el }
+         when "join"
+            { "Fn::Join" => value.expand_el }
+         when "concat"
+            { "Fn::Join" => ['', value.expand_el] }
+         when "getatt"
+            { "Fn::GetAtt" => value.expand_el }
+         when "findinmap"
+            { "Fn::FindInMap" => value.expand_el }
+         when "base64"
+            { "Fn::Base64" => value.expand_el }
+         else
+            super
+         end 
+      end
+   end
 end
 
 module Cfoo

@@ -7,4 +7,5 @@ require "cfoo/processor"
 require "cfoo/project"
 require "cfoo/renderer"
 require "cfoo/version"
+require "cfoo/yaml"
 

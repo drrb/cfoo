@@ -67,32 +67,32 @@ module Cfoo
                 it "wraps references in AWS Ref maps" do
                     write "#{project_root}/ref.yml", "!!ref AWS::Region"
 
-                    file_system.parse_file("ref.yml").should == {"Ref" => "AWS::Region" }
+                    file_system.parse_file("ref.yml").should == YAML::PrivateType.create("ref", "AWS::Region")
                 end
                 it "wraps attribute references in AWS GetAtt maps" do
-                    write "#{project_root}/getattr.yml", "!!getatt [Object, Property]"
+                    write "#{project_root}/getatt.yml", "!!getatt [Object, Property]"
 
-                    file_system.parse_file("getattr.yml").should == {"Fn::GetAtt" => [ "Object", "Property" ] }
+                    file_system.parse_file("getatt.yml").should == YAML::PrivateType.create("getatt", ["Object", "Property"])
                 end
                 it "wraps joins in AWS Join function-calls" do
-                    write "#{project_root}/join.yml", "!!join ['', [a,b,c]]"
+                    write "#{project_root}/join.yml", "!!join ['', [a, b, c]]"
 
-                    file_system.parse_file("join.yml").should == {"Fn::Join" => [ "" , [ "a", "b", "c" ] ] }
+                    file_system.parse_file("join.yml").should == YAML::PrivateType.create("join", ["", ["a","b","c"]])
                 end
                 it "wraps concatenations in AWS Join function-calls with empty strings" do
-                    write "#{project_root}/join.yml", "!!concat [a,b,c]"
+                    write "#{project_root}/concat.yml", "!!concat [a, b, c]"
 
-                    file_system.parse_file("join.yml").should == {"Fn::Join" => [ "" , [ "a", "b", "c" ] ] }
+                    file_system.parse_file("concat.yml").should == YAML::PrivateType.create("concat", ["a","b","c"])
                 end
                 it "wraps map lookups in AWS FindInMap function-calls" do
                     write "#{project_root}/findinmap.yml", "!!findinmap [Map, Key, Value]"
 
-                    file_system.parse_file("findinmap.yml").should == {"Fn::FindInMap" => [ "Map", "Key", "Value" ] }
+                    file_system.parse_file("findinmap.yml").should == YAML::PrivateType.create("findinmap", ["Map", "Key", "Value"])
                 end
                 it "wraps base64 strings in AWS Base64 function-calls" do
-                    write "#{project_root}/b64.yml", "!!base64 myencodedstring"
+                    write "#{project_root}/base64.yml", "!!base64 myencodedstring"
 
-                    file_system.parse_file("b64.yml").should == {"Fn::Base64" => "myencodedstring"}
+                    file_system.parse_file("base64.yml").should == YAML::PrivateType.create("base64", "myencodedstring")
                 end
             end
         end
