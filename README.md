@@ -1,6 +1,7 @@
 # Cfoo
 
 [![Build Status](https://travis-ci.org/drrb/cfoo.png?branch=master)](https://travis-ci.org/drrb/cfoo)
+[![Coverage Status](https://coveralls.io/repos/drrb/cfoo/badge.png?branch=master)](https://coveralls.io/r/drrb/cfoo)
 
 Write your CloudFormation templates in a YAML-based markup language
 
