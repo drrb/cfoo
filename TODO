@@ -14,6 +14,7 @@ Allow module references to remote templates (inc. Git repositories) (auto-includ
 Allow rendering only part of the project (in case part of the infrastructure already exists)
 Render templates with ERB to allow extra flexibility/substitution
 Resolve EL and complain/fail if targets don't exist
+Unit testing for templates
 
 Tests
 ----------
