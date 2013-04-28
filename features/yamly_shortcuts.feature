@@ -5,7 +5,7 @@ Feature: YAMLy shortcuts
     Scenario: Reference
         Given I have a file "ref.yml" containing
         """
-        Reference: !!ref AWS::Region
+        Reference: !ref AWS::Region
         """
         When I process "ref.yml"
         Then the output should match JSON
@@ -19,7 +19,7 @@ Feature: YAMLy shortcuts
     Scenario: Attribute
         Given I have a file "ref.yml" containing
         """
-        Attribute: !!getatt [ BastionHost, PublicIp ]
+        Attribute: !getatt [ BastionHost, PublicIp ]
         """
         When I process "ref.yml"
         Then the output should match JSON
@@ -33,7 +33,7 @@ Feature: YAMLy shortcuts
     Scenario: Join function call
         Given I have a file "join.yml" containing
         """
-        Join: !!join
+        Join: !join
             - ""
             - [ "string a", "string b" ]
         """
@@ -49,7 +49,7 @@ Feature: YAMLy shortcuts
     Scenario: Join function call with empty strings
         Given I have a file "join.yml" containing
         """
-        Join: !!concat [ "string a", "string b" ]
+        Join: !concat [ "string a", "string b" ]
         """
         When I process "join.yml"
         Then the output should match JSON
@@ -63,7 +63,7 @@ Feature: YAMLy shortcuts
     Scenario: FindInMap lookup
         Given I have a file "map.yml" containing
         """
-        MapLookup: !!findinmap [Map, Key, Value]
+        MapLookup: !findinmap [Map, Key, Value]
         """
         When I process "map.yml"
         Then the output should match JSON
@@ -77,7 +77,7 @@ Feature: YAMLy shortcuts
     Scenario: Base64 string
         Given I have a file "multistring.yml" containing
         """
-        mystring: !!base64 |
+        mystring: !base64 |
             Some string
             across multiple
             lines
@@ -94,7 +94,7 @@ Feature: YAMLy shortcuts
     Scenario: Base64 string with embedded EL
         Given I have a file "embeddedel.yml" containing
         """
-        mystring: !!base64 |
+        mystring: !base64 |
             Some string
             across $(Number)
             lines

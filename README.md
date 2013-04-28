@@ -50,12 +50,12 @@ Equivalent Cfoo template snippet:
 
 ```yaml
 Properties:
-  ImageId : !!findinmap [ AWSRegion2AMI, $(AWS::Region), AMI ]
+  ImageId : !findinmap [ AWSRegion2AMI, $(AWS::Region), AMI ]
   InstanceType: $(InstanceType)
   SecurityGroups: 
      - $(FrontendGroup)
   KeyName: $(KeyName)
-  UserData: !!base64 |
+  UserData: !base64 |
     #!/bin/bash -v
     yum update -y aws-cfn-bootstrap
 

@@ -46,7 +46,7 @@ class Hash
 end
 
 module YAML
-   class PrivateType
+   class DomainType
       def expand_el
          case type_id
          when "ref"
