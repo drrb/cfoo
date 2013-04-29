@@ -2,7 +2,7 @@ require 'rubygems'
 require 'parslet'
 
 module Cfoo
-    class ElParserParslet < Parslet::Parser
+    class ElParser < Parslet::Parser
 
         rule(:space) { match('\s') }
         rule(:space?) { space.maybe }
@@ -40,7 +40,7 @@ module Cfoo
             str("$(") >> ( mapping | attribute_reference | reference ) >> str(")")
         end
         rule(:string) do
-            ( escaped_dollar | lone_backslash | el | text ).repeat
+            ( escaped_dollar | lone_backslash | el | text ).repeat.as(:string)
         end
 
         root(:string)
@@ -70,20 +70,37 @@ module Cfoo
         rule(:attribute_reference => { :reference => subtree(:reference), :attribute => subtree(:attribute)}) do
             { "Fn::GetAtt" => [ reference, attribute ] }
         end
+
+        rule(:string => subtree(:string)) do
+            # Join escaped EL with adjacent strings
+            parts = string.inject(['']) do |combined_parts, part|
+                previous = combined_parts.pop
+                if previous.class == String && part.class == String
+                    combined_parts << previous + part
+                else
+                    combined_parts << previous << part
+                end
+            end
+
+            parts.reject! {|part| part.empty? }
+
+            if parts.size == 1
+                parts.first
+            else
+                { "Fn::Join" => [ "", parts ] }
+            end
+        end
     end
 
     class ExpressionLanguage
         def self.parse(string)
-            parser = ElParserParslet.new
+            return string if string.empty?
+
+            parser = ElParser.new
             transform = ElTransform.new
 
             tree = parser.parse(string)
-            parts = transform.apply(tree)
-            if parts.class == Array 
-                parts
-            else
-                [parts]
-            end
+            transform.apply(tree)
         rescue Parslet::ParseFailed => failure
             #TODO: handle this properly
             raise failure
