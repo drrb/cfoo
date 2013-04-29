@@ -1,9 +1,9 @@
 Features
 ----------
+More tests for EL parsing
 YAML types for everything!
 EL shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 
 Add Fn::GetAZs
-Better map shorthand, for when one map key is a reference (e.g. { "Fn::FindInMap": [ "AWSRegion2AMI", { "Ref" : "AWS::Region" }, "AMI" ] })
 Better errors when parsing fails
 Split project into modules (arbitrary logical components: e.g. VPC, Mail Server, Puppet)
 Split into resources/mappings/parameters/etc by putting templates into directories with those names
