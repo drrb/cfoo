@@ -27,7 +27,27 @@ end
 
 class String
     def expand_el
-        Cfoo::ElParser.new.parse self
+        return self if empty?
+
+        parts = Cfoo::ExpressionLanguage.parse(self)
+
+        # Join escaped EL with adjacent strings
+        parts = parts.inject(['']) do |combined_parts, part|
+            previous = combined_parts.pop
+            if previous.class == String && part.class == String
+                combined_parts << previous + part
+            else
+                combined_parts << previous << part
+            end
+        end
+
+        parts.reject! {|part| part.empty? }
+
+        if parts.size == 1
+            parts.first
+        else
+            { "Fn::Join" => [ "", parts ] }
+        end
     end
 end
 

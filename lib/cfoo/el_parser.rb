@@ -1,21 +1,6 @@
 require 'rubygems'
 require 'parslet'
 
-class String
-    # finds all occurences of the regex
-    # returns an array of the matches and the bits in between
-    def partition_split(regex)
-        parsing = self
-        parsed = []
-        until parsing.empty?
-            parts = parsing.partition regex
-            parsed = parsed + parts[0..1]
-            parsing = parts[2]
-        end
-        parsed.reject {|e| e.empty?}
-    end
-end
-
 module Cfoo
     class ElParserParslet < Parslet::Parser
 
@@ -93,39 +78,15 @@ module Cfoo
             transform = ElTransform.new
 
             tree = parser.parse(string)
-            transform.apply(tree)
-        rescue Parslet::ParseFailed => failure
-            puts failure.cause.ascii_tree
-            raise "Handle this properly"
-        end
-    end
-
-    class ElParser
-        def parse(string)
-            return string if string.empty?
-
-            parts = ExpressionLanguage.parse(string)
-            unless parts.class == Array 
-                parts = [parts]
-            end
-
-            # Join escaped EL with adjacent strings
-            parts = parts.inject(['']) do |combined_parts, part|
-                previous = combined_parts.pop
-                if previous.class == String && part.class == String
-                    combined_parts << previous + part
-                else
-                    combined_parts << previous << part
-                end
-            end
-
-            parts.reject! {|part| part.empty? }
-
-            if parts.size == 1
-                parts.first
+            parts = transform.apply(tree)
+            if parts.class == Array 
+                parts
             else
-                { "Fn::Join" => [ "", parts ] }
+                [parts]
             end
+        rescue Parslet::ParseFailed => failure
+            #TODO: handle this properly
+            raise failure
         end
     end
 end
