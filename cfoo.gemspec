@@ -23,6 +23,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "json"
+  gem.add_dependency "parslet"
 
   gem.add_development_dependency "bundler", "~> 1.3"
   gem.add_development_dependency "rake"

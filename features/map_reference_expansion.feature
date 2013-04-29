@@ -8,7 +8,7 @@ Feature: Expand EL Mapping References
         """
         EntryPoint:
             Description: IP address of the Bastion Host
-            Value: $(SubnetConfig.VPC[CIDR])
+            Value: $(SubnetConfig[VPC][CIDR])
         """
         When I process "outputs.yml"
         Then the output should match JSON
@@ -27,7 +27,7 @@ Feature: Expand EL Mapping References
         """
         WebSite:
             Description: URL of the website
-            Value: http://$(Network.Dns[LoadBalancerDnsName])/index.html
+            Value: http://$(Network[Dns][LoadBalancerDnsName])/index.html
         """
         When I process "outputs.yml"
         Then the output should match JSON

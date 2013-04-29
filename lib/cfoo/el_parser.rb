@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'parslet'
+
 class String
     # finds all occurences of the regex
     # returns an array of the matches and the bits in between
@@ -14,25 +17,96 @@ class String
 end
 
 module Cfoo
+    class ElParserParslet < Parslet::Parser
+
+        rule(:space) { match('\s') }
+        rule(:space?) { space.maybe }
+        rule(:dollar) { str('$') }
+        rule(:escaped_dollar) { str('\$').as(:escaped_dollar) }
+        rule(:lone_backslash) { str('\\').as(:lone_backslash) }
+        rule(:lparen) { str('(') }
+        rule(:rparen) { str(')') }
+        rule(:lbracket) { str('[') }
+        rule(:rbracket) { str(']') }
+        rule(:dot) { str('.') }
+        rule(:identifier) { match['a-zA-Z'].repeat(1).as(:identifier) }
+        rule(:text) { match['^\\\\$'].repeat(1).as(:text) }
+        rule(:attribute_reference) do
+            (
+                expression.as(:reference) >> (
+                    str(".") >> identifier.as(:attribute) |
+                    str("[") >> expression.as(:attribute) >> str("]")
+            )
+            ).as(:attribute_reference)
+        end
+        rule(:mapping) do
+            (
+                expression.as(:map) >>
+                str("[") >> expression.as(:key) >> str("]") >>
+                str("[") >> expression.as(:value) >> str("]")
+            ).as(:mapping)
+        end
+        rule(:reference) do
+            expression.as(:reference)
+        end
+
+        rule(:expression) { el | identifier }
+        rule(:el) do
+            str("$(") >> ( mapping | attribute_reference | reference ) >> str(")")
+        end
+        rule(:string) do
+            ( escaped_dollar | lone_backslash | el | text ).repeat
+        end
+
+        root(:string)
+    end
+
+    class ElTransform < Parslet::Transform
+
+        rule(:escaped_dollar => simple(:dollar)) { "$" }
+        rule(:lone_backslash => simple(:backslash)) { "\\" }
+
+        rule(:identifier => simple(:identifier)) do
+            identifier.str
+        end
+
+        rule(:text => simple(:text)) do
+            text.str
+        end
+
+        rule(:reference => subtree(:reference)) do
+            { "Ref" => reference }
+        end
+
+        rule(:mapping => { :map => subtree(:map), :key => subtree(:key), :value => subtree(:value)}) do
+            { "Fn::FindInMap" => [map, key, value] }
+        end
+
+        rule(:attribute_reference => { :reference => subtree(:reference), :attribute => subtree(:attribute)}) do
+            { "Fn::GetAtt" => [ reference, attribute ] }
+        end
+    end
+
+    class ExpressionLanguage
+        def self.parse(string)
+            parser = ElParserParslet.new
+            transform = ElTransform.new
+
+            tree = parser.parse(string)
+            transform.apply(tree)
+        rescue Parslet::ParseFailed => failure
+            puts failure.cause.ascii_tree
+            raise "Handle this properly"
+        end
+    end
+
     class ElParser
         def parse(string)
-            contains_el = string =~ /\$\(.*\)/
-            unless contains_el
-                return string
-            end
+            return string if string.empty?
 
-            parts = string.partition_split /\\?\$\((.*?)\)/
-            parts.map! do |part|
-                part =~ /\\?\$\(.*\)/ ? ElToken.new(part) : part
-            end
-
-            # Unescape EL
-            parts.map! do |part|
-                if part.class == ElToken && part.escaped?
-                    part.expand_el
-                else
-                    part
-                end
+            parts = ExpressionLanguage.parse(string)
+            unless parts.class == Array 
+                parts = [parts]
             end
 
             # Join escaped EL with adjacent strings
@@ -45,47 +119,12 @@ module Cfoo
                 end
             end
 
-            # Expand the remaining EL
-            parts.map! do |part|
-                part.class == ElToken ? part.expand_el : part
-            end
-
             parts.reject! {|part| part.empty? }
 
             if parts.size == 1
                 parts.first
             else
                 { "Fn::Join" => [ "", parts ] }
-            end
-        end
-    end
-
-    class ElToken
-        def initialize(string)
-            raise "Invalid EL: '#{string}'" unless string =~ /\A\\?\$\(.*\)\z/
-            @string = string
-        end
-
-        def escaped?
-            @string =~ /\A\\/
-        end
-
-        def expand_el
-            if escaped?
-                @string.sub /\A\\/, ''
-            else
-                reference = @string.sub /^\$\((.*)\)$/, '\1'
-                case reference
-                when /\A.*[.].*\[.*\]\z/
-                    map, key_value = reference.split('.')[0..1]
-                    key, boxed_value = key_value.partition(/\[.*\]/)[0..1]
-                    value = boxed_value.sub(/\A\[(.*)\]\z/, '\1')
-                    { "Fn::FindInMap" => [map, key, value] }
-                when /\A.*[.].*\z/
-                    { "Fn::GetAtt" => reference.split(".") }
-                else
-                    { "Ref" => reference }
-                end
             end
         end
     end

@@ -61,7 +61,7 @@ module Cfoo
                 end
 
                 it 'turns EL map references into CloudFormation "FindInMap" maps' do
-                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(fruit.apple[color])")
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(fruit[apple][color])")
                     parser.parse_file("myfile.yml").should == {"Fn::FindInMap" => ["fruit", "apple", "color"]}
                 end
 

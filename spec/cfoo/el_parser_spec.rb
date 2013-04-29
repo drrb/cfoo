@@ -20,7 +20,7 @@ module Cfoo
         end
 
         it 'turns EL map references into CloudFormation "FindInMap" maps' do
-            parser.parse("$(fruit.apple[color])").should == {"Fn::FindInMap" => ["fruit", "apple", "color"]}
+            parser.parse("$(fruit[apple][color])").should == {"Fn::FindInMap" => ["fruit", "apple", "color"]}
         end
 
         it 'leaves escaped EL alone' do
