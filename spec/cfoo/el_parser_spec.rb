@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 module Cfoo
-    describe ExpressionLanguage do
-        let(:parser) { ExpressionLanguage }
+    describe ElParser do
+        let(:parser) { ElParser }
         it 'turns simple EL references into CloudFormation "Ref" maps' do
             parser.parse("$(orange)").should == {"Ref" => "orange"}
         end

@@ -27,7 +27,7 @@ end
 
 class String
     def expand_el
-        Cfoo::ExpressionLanguage.parse(self)
+        Cfoo::ElParser.parse(self)
     end
 end
 

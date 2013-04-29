@@ -4,6 +4,19 @@ require 'parslet'
 module Cfoo
     class ElParser < Parslet::Parser
 
+        def self.parse(string)
+            return string if string.empty?
+
+            parser = ElParser.new
+            transform = ElTransform.new
+
+            tree = parser.parse(string)
+            transform.apply(tree)
+        rescue Parslet::ParseFailed => failure
+            #TODO: handle this properly
+            raise failure
+        end
+
         rule(:space) { match('\s') }
         rule(:space?) { space.maybe }
         rule(:dollar) { str('$') }
@@ -89,21 +102,6 @@ module Cfoo
             else
                 { "Fn::Join" => [ "", parts ] }
             end
-        end
-    end
-
-    class ExpressionLanguage
-        def self.parse(string)
-            return string if string.empty?
-
-            parser = ElParser.new
-            transform = ElTransform.new
-
-            tree = parser.parse(string)
-            transform.apply(tree)
-        rescue Parslet::ParseFailed => failure
-            #TODO: handle this properly
-            raise failure
         end
     end
 end
