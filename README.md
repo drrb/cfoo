@@ -16,7 +16,7 @@ Cfoo can be installed as a Ruby Gem
 
 Process some Cfoo templates from the command line
 
-    $ cfoo  web-server-template.yml database_template.yml
+    $ cfoo web-server-template.yml database_template.yml
 
 ## Comparison with standard CloudFormation templates
 
