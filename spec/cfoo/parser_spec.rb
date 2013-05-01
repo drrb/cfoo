@@ -96,6 +96,11 @@ module Cfoo
 
                     parser.parse_file("findinmap.yml").should == {"Fn::FindInMap" => [ "Map", "Key", "Value" ] }
                 end
+                it "wraps AZ lookups in AWS GetAZs function-calls" do
+                    file_system.should_receive(:parse_file).with("az.yml").and_return(YAML::DomainType.create("GetAZs", "us-east-1"))
+
+                    parser.parse_file("az.yml").should == {"Fn::GetAZs" => "us-east-1"}
+                end
                 it "wraps base64 strings in AWS Base64 function-calls" do
                     file_system.should_receive(:parse_file).with("b64.yml").and_return(YAML::DomainType.create("Base64", "myencodedstring"))
 

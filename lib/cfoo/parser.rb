@@ -51,7 +51,7 @@ module YAML
          case type_id
          when "Ref"
             { "Ref" => value.expand_el }
-         when /^(Join|GetAtt|FindInMap|Base64)$/
+         when /^(Base64|FindInMap|GetAtt|GetAZs|Join)$/
             { "Fn::#{type_id}" => value.expand_el }
          when "Concat"
             { "Fn::Join" => ['', value.expand_el] }

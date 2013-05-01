@@ -74,6 +74,20 @@ Feature: YAMLy shortcuts
         }
         """
 
+    Scenario: AZ listing
+        Given I have a file "map.yml" containing
+        """
+        AvailabilityZones: !GetAZs us-east-1
+        """
+        When I process "map.yml"
+        Then the output should match JSON
+        """
+        {
+            "AWSTemplateFormatVersion" : "2010-09-09",
+            "AvailabilityZones" : { "Fn::GetAZs" : "us-east-1" }
+        }
+        """
+
     Scenario: Base64 string
         Given I have a file "multistring.yml" containing
         """

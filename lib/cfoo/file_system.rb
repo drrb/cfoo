@@ -1,5 +1,13 @@
 require 'cfoo/yaml'
 
+module YAML
+    def self.add_domain_type_that_gets_loaded_like_in_ruby_1_8(domain_type)
+        add_domain_type "", domain_type do |tag, value|
+            DomainType.create(domain_type, value)
+        end
+    end
+end
+
 module Cfoo
     class FileSystem
         def initialize(project_root)
@@ -12,25 +20,11 @@ module Cfoo
 
         def parse_file(file_name)
             #TODO: raise errors if "value" isn't the right type
-            #TODO: move these into a dedidated YAML parser
-            YAML.add_domain_type "", "Ref" do |tag,value|
-                YAML::DomainType.create("Ref", value)
-            end 
-            YAML.add_domain_type "", "Join" do |tag,value|
-                YAML::DomainType.create("Join", value)
-            end 
-            YAML.add_domain_type "", "Concat" do |tag,value|
-                YAML::DomainType.create("Concat", value)
-            end 
-            YAML.add_domain_type "", "GetAtt" do |tag,value|
-                YAML::DomainType.create("GetAtt", value)
-            end 
-            YAML.add_domain_type "", "FindInMap" do |tag,value|
-                YAML::DomainType.create("FindInMap", value)
-            end 
-            YAML.add_domain_type "", "Base64" do |tag,value|
-                YAML::DomainType.create("Base64", value)
-            end 
+            #TODO: move these into a dedicated YAML parser
+            cfn_domain_types = [ "GetAZs", "Ref", "Join", "Concat", "GetAtt", "FindInMap", "Base64" ]
+            cfn_domain_types.each do |domain_type|
+                YAML.add_domain_type_that_gets_loaded_like_in_ruby_1_8 domain_type
+            end
             YAML.load_file(resolve_file file_name)
         end
 
