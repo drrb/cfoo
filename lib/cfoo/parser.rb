@@ -49,18 +49,12 @@ module YAML
    class DomainType
       def expand_el
          case type_id
-         when "ref"
+         when "Ref"
             { "Ref" => value.expand_el }
-         when "join"
-            { "Fn::Join" => value.expand_el }
-         when "concat"
+         when /^(Join|GetAtt|FindInMap|Base64)$/
+            { "Fn::#{type_id}" => value.expand_el }
+         when "Concat"
             { "Fn::Join" => ['', value.expand_el] }
-         when "getatt"
-            { "Fn::GetAtt" => value.expand_el }
-         when "findinmap"
-            { "Fn::FindInMap" => value.expand_el }
-         when "base64"
-            { "Fn::Base64" => value.expand_el }
          else
             super
          end 

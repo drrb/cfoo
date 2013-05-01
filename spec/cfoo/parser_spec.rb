@@ -73,31 +73,31 @@ module Cfoo
 
             context "when parsing a YAML::PrivateType" do
                 it "wraps references in AWS Ref maps" do
-                    file_system.should_receive(:parse_file).with("ref.yml").and_return(YAML::DomainType.create("ref", "AWS::Region"))
+                    file_system.should_receive(:parse_file).with("ref.yml").and_return(YAML::DomainType.create("Ref", "AWS::Region"))
                     parser.parse_file("ref.yml").should == {"Ref" => "AWS::Region" }
                 end
                 it "wraps attribute references in AWS GetAtt maps" do
-                    file_system.should_receive(:parse_file).with("getattr.yml").and_return(YAML::DomainType.create("getatt", ["Object", "Property"]))
+                    file_system.should_receive(:parse_file).with("getattr.yml").and_return(YAML::DomainType.create("GetAtt", ["Object", "Property"]))
 
                     parser.parse_file("getattr.yml").should == {"Fn::GetAtt" => [ "Object", "Property" ] }
                 end
                 it "wraps joins in AWS Join function-calls" do
-                    file_system.should_receive(:parse_file).with("join.yml").and_return(YAML::DomainType.create("join", ['', ["a","b","c"]]))
+                    file_system.should_receive(:parse_file).with("join.yml").and_return(YAML::DomainType.create("Join", ['', ["a","b","c"]]))
 
                     parser.parse_file("join.yml").should == {"Fn::Join" => [ "" , [ "a", "b", "c" ] ] }
                 end
                 it "wraps concatenations in AWS Join function-calls with empty strings" do
-                    file_system.should_receive(:parse_file).with("join.yml").and_return(YAML::DomainType.create("concat", ["a","b","c"]))
+                    file_system.should_receive(:parse_file).with("join.yml").and_return(YAML::DomainType.create("Concat", ["a","b","c"]))
 
                     parser.parse_file("join.yml").should == {"Fn::Join" => [ "" , [ "a", "b", "c" ] ] }
                 end
                 it "wraps map lookups in AWS FindInMap function-calls" do
-                    file_system.should_receive(:parse_file).with("findinmap.yml").and_return(YAML::DomainType.create("findinmap", ["Map", "Key", "Value"]))
+                    file_system.should_receive(:parse_file).with("findinmap.yml").and_return(YAML::DomainType.create("FindInMap", ["Map", "Key", "Value"]))
 
                     parser.parse_file("findinmap.yml").should == {"Fn::FindInMap" => [ "Map", "Key", "Value" ] }
                 end
                 it "wraps base64 strings in AWS Base64 function-calls" do
-                    file_system.should_receive(:parse_file).with("b64.yml").and_return(YAML::DomainType.create("base64", "myencodedstring"))
+                    file_system.should_receive(:parse_file).with("b64.yml").and_return(YAML::DomainType.create("Base64", "myencodedstring"))
 
                     parser.parse_file("b64.yml").should == {"Fn::Base64" => "myencodedstring"}
                 end

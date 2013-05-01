@@ -13,23 +13,23 @@ module Cfoo
         def parse_file(file_name)
             #TODO: raise errors if "value" isn't the right type
             #TODO: move these into a dedidated YAML parser
-            YAML.add_domain_type "", "ref" do |tag,value|
-                YAML::DomainType.create("ref", value)
+            YAML.add_domain_type "", "Ref" do |tag,value|
+                YAML::DomainType.create("Ref", value)
             end 
-            YAML.add_domain_type "", "join" do |tag,value|
-                YAML::DomainType.create("join", value)
+            YAML.add_domain_type "", "Join" do |tag,value|
+                YAML::DomainType.create("Join", value)
             end 
-            YAML.add_domain_type "", "concat" do |tag,value|
-                YAML::DomainType.create("concat", value)
+            YAML.add_domain_type "", "Concat" do |tag,value|
+                YAML::DomainType.create("Concat", value)
             end 
-            YAML.add_domain_type "", "getatt" do |tag,value|
-                YAML::DomainType.create("getatt", value)
+            YAML.add_domain_type "", "GetAtt" do |tag,value|
+                YAML::DomainType.create("GetAtt", value)
             end 
-            YAML.add_domain_type "", "findinmap" do |tag,value|
-                YAML::DomainType.create("findinmap", value)
+            YAML.add_domain_type "", "FindInMap" do |tag,value|
+                YAML::DomainType.create("FindInMap", value)
             end 
-            YAML.add_domain_type "", "base64" do |tag,value|
-                YAML::DomainType.create("base64", value)
+            YAML.add_domain_type "", "Base64" do |tag,value|
+                YAML::DomainType.create("Base64", value)
             end 
             YAML.load_file(resolve_file file_name)
         end
