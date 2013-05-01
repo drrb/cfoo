@@ -18,7 +18,9 @@ Process some Cfoo templates from the command line
 
     $ cfoo web-server-template.yml database_template.yml
 
-## Comparison with standard CloudFormation templates
+## Templates
+
+### Comparison with standard CloudFormation templates
 
 Snippet from a CloudFormation template (based on [this example](https://s3.amazonaws.com/cloudformation-templates-us-east-1/Rails_Single_Instance.template)):
 
@@ -50,12 +52,12 @@ Equivalent Cfoo template snippet:
 
 ```yaml
 Properties:
-  ImageId : !findinmap [ AWSRegion2AMI, $(AWS::Region), AMI ]
+  ImageId : AWSRegion2AMI[$(AWS::Region)][AMI]
   InstanceType: $(InstanceType)
   SecurityGroups: 
      - $(FrontendGroup)
   KeyName: $(KeyName)
-  UserData: !base64 |
+  UserData: !Base64 |
     #!/bin/bash -v
     yum update -y aws-cfn-bootstrap
 
@@ -69,6 +71,74 @@ Properties:
 
     /opt/aws/bin/cfn-signal -e 0 -r "cfn-init completed" '$(WaitHandle)'
 ```
+
+### Shortcuts
+
+Cfoo allows you to simplify CloudFormation [intrinsic function](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html)
+references using its own shorthand
+
+<table>
+   <tr>
+      <th>CloudFormation Intrinsic Function</th>
+      <th>Cfoo Shortcut</th>
+   </tr>
+   <tr>
+      <td><pre>{ "Ref" : "InstanceType" }</pre></td>
+      <td><pre>$(InstanceType)</pre></td>
+   </tr>
+   <tr>
+      <td><pre>{ "FindInMap" : [ "SubnetConfig", "VPC", "CIDR" ] }</pre></td>
+      <td><pre>$(SubnetConfig[VPC][CIDR])</pre></td>
+   </tr>
+   <tr>
+      <td><pre>{ "Fn::GetAtt" : [ "Ec2Instance", "PublicIp" ] }</pre></td>
+      <td><pre>$(Ec2Instance.PublicIp)</pre></td>
+   </tr>
+   <tr>
+      <td><pre>{ "Fn::GetAtt" : [ "Ec2Instance", "PublicIp" ] }</pre></td>
+      <td><pre>$(Ec2Instance[PublicIp])</pre></td>
+   </tr>
+   <tr>
+      <td><pre>{ "Fn::Join" : [ "", [{"Ref" : "HostedZone"}, "." ]]}</pre></td>
+      <td><pre>$(HostedZone).</pre></td>
+   </tr>
+</table>
+
+### YAML Types
+
+Cfoo gives you the option of using YAML custom data-types where it helps to make your templates easier to read.
+The table below uses inline YAML lists, but multiline lists can also be used.
+
+<table>
+   <tr>
+      <th>CloudFormation Intrinsic Function</th>
+      <th>Cfoo YAML Type</th>
+   </tr>
+   <tr>
+      <td><pre>{ "Ref" : "InstanceType" }</pre></td>
+      <td><pre>!Ref InstanceType</pre></td>
+   </tr>
+   <tr>
+      <td><pre>{ "FindInMap" : [ "SubnetConfig", "VPC", "CIDR" ] }</pre></td>
+      <td><pre>!FindInMap [ SubnetConfig, VPC, CIDR ]</pre></td>
+   </tr>
+   <tr>
+      <td><pre>{ "Fn::GetAtt" : [ "Ec2Instance", "PublicIp" ] }</pre></td>
+      <td><pre>!GetAtt [ Ec2Instance, PublicIp ]</pre></td>
+   </tr>
+   <tr>
+      <td><pre>{ "Fn::Join" : [ ",", [ "DatabaseServer", "WebServer", "OtherRole" ]]}</pre></td>
+      <td><pre>!Join [ ",", [ DatabaseServer, WebServer, OtherRole ]]</pre></td>
+   </tr>
+   <tr>
+      <td><pre>{ "Fn::Join" : [ "", [{"Ref" : "HostedZone"}, "." ]]}</pre></td>
+      <td><pre>!Concat [ $(HostedZone), "." ]</pre></td>
+   </tr>
+   <tr>
+      <td><pre>{ "Fn::Base64" : "#!/bin/bash\necho 'Running script...'" }</pre></td>
+      <td><pre>!Base64 "#!/bin/bash\necho 'running script...'"</pre></td>
+   </tr>
+</table>
 
 ## Goals
 
