@@ -4,7 +4,6 @@ More tests for EL parsing
 Shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 
 Shorthand for Fn::GetAZs
 Better errors when parsing fails
-Split project into modules (arbitrary logical components: e.g. VPC, Mail Server, Puppet)
 Split into resources/mappings/parameters/etc by putting templates into directories with those names
 Allow directory for raw templates
 Allow traditional JSON CloudFormation templates (including modules, splitting, etc)
