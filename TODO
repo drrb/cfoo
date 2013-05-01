@@ -1,9 +1,8 @@
 Features
 ----------
 More tests for EL parsing
-YAML types for everything!
-EL shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 
-Add Fn::GetAZs
+Shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 
+Shorthand for Fn::GetAZs
 Better errors when parsing fails
 Split project into modules (arbitrary logical components: e.g. VPC, Mail Server, Puppet)
 Split into resources/mappings/parameters/etc by putting templates into directories with those names
@@ -26,4 +25,3 @@ Refactor EL parser
 
 Bugs
 ----------
-Parsing fails for EL in EL (e.g. "$(Map.$(KeyName)[Value])"). Do we need a real parser?
