@@ -1,13 +1,5 @@
 require 'cfoo/yaml'
 
-module YAML
-    def self.add_domain_type_that_gets_loaded_like_in_ruby_1_8(domain_type)
-        add_domain_type "", domain_type do |tag, value|
-            DomainType.create(domain_type, value)
-        end
-    end
-end
-
 module Cfoo
     class FileSystem
         def initialize(project_root)

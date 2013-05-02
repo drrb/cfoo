@@ -19,7 +19,6 @@ module Cfoo
 
         rule(:space) { match('\s') }
         rule(:space?) { space.maybe }
-        rule(:dollar) { str('$') }
         rule(:escaped_dollar) { str('\$').as(:escaped_dollar) }
         rule(:lone_backslash) { str('\\').as(:lone_backslash) }
         rule(:lparen) { str('(') }
@@ -34,7 +33,7 @@ module Cfoo
                 expression.as(:reference) >> (
                     str(".") >> identifier.as(:attribute) |
                     str("[") >> expression.as(:attribute) >> str("]")
-            )
+                )
             ).as(:attribute_reference)
         end
         rule(:mapping) do

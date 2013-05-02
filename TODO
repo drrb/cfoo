@@ -1,6 +1,7 @@
 Features
 ----------
 More tests for EL parsing
+Spaces in EL?
 Shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 
 Shorthand for Fn::GetAZs
 Better errors when parsing fails
