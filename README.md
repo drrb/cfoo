@@ -77,68 +77,60 @@ Properties:
 Cfoo allows you to simplify CloudFormation [intrinsic function](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html)
 references using its own shorthand
 
-<table>
-   <tr>
-      <th>CloudFormation Intrinsic Function</th>
-      <th>Cfoo Shortcut</th>
-   </tr>
-   <tr>
-      <td><pre>{ "Ref" : "InstanceType" }</pre></td>
-      <td><pre>$(InstanceType)</pre></td>
-   </tr>
-   <tr>
-      <td><pre>{ "FindInMap" : [ "SubnetConfig", "VPC", "CIDR" ] }</pre></td>
-      <td><pre>$(SubnetConfig[VPC][CIDR])</pre></td>
-   </tr>
-   <tr>
-      <td><pre>{ "Fn::GetAtt" : [ "Ec2Instance", "PublicIp" ] }</pre></td>
-      <td><pre>$(Ec2Instance.PublicIp)</pre></td>
-   </tr>
-   <tr>
-      <td><pre>{ "Fn::GetAtt" : [ "Ec2Instance", "PublicIp" ] }</pre></td>
-      <td><pre>$(Ec2Instance[PublicIp])</pre></td>
-   </tr>
-   <tr>
-      <td><pre>{ "Fn::Join" : [ "", [{"Ref" : "HostedZone"}, "." ]]}</pre></td>
-      <td><pre>$(HostedZone).</pre></td>
-   </tr>
-</table>
+##### Reference
+
+CloudFormation: `{ "Ref" : "InstanceType" }`
+
+Cfoo Shortcut: `$(InstanceType)`
+
+##### Mapping Reference
+
+CloudFormation: `{ "FindInMap" : [ "SubnetConfig", "VPC", "CIDR" ] }`
+
+Cfoo Shortcut: `$(SubnetConfig[VPC][CIDR])`
+
+##### Attribute Reference
+
+CloudFormation: `{ "Fn::GetAtt" : [ "Ec2Instance", "PublicIp" ] }`
+
+Cfoo Shortcut: `$(Ec2Instance.PublicIp)`
+
+Other Shortcut: `$(Ec2Instance[PublicIp])`
+
+##### Embedded Reference
+
+CloudFormation: `{ "Fn::Join" : [ "", [{"Ref" : "HostedZone"}, "." ]]}`
+
+Cfoo Shortcut: `$(HostedZone).`
 
 ### YAML Types
 
 Cfoo gives you the option of using YAML custom data-types where it helps to make your templates easier to read.
 The table below uses inline YAML lists, but multiline lists can also be used.
 
-<table>
-   <tr>
-      <th>CloudFormation Intrinsic Function</th>
-      <th>Cfoo YAML Type</th>
-   </tr>
-   <tr>
-      <td><pre>{ "Ref" : "InstanceType" }</pre></td>
-      <td><pre>!Ref InstanceType</pre></td>
-   </tr>
-   <tr>
-      <td><pre>{ "FindInMap" : [ "SubnetConfig", "VPC", "CIDR" ] }</pre></td>
-      <td><pre>!FindInMap [ SubnetConfig, VPC, CIDR ]</pre></td>
-   </tr>
-   <tr>
-      <td><pre>{ "Fn::GetAtt" : [ "Ec2Instance", "PublicIp" ] }</pre></td>
-      <td><pre>!GetAtt [ Ec2Instance, PublicIp ]</pre></td>
-   </tr>
-   <tr>
-      <td><pre>{ "Fn::Join" : [ ",", [ "DatabaseServer", "WebServer", "OtherRole" ]]}</pre></td>
-      <td><pre>!Join [ ",", [ DatabaseServer, WebServer, OtherRole ]]</pre></td>
-   </tr>
-   <tr>
-      <td><pre>{ "Fn::Join" : [ "", [{"Ref" : "HostedZone"}, "." ]]}</pre></td>
-      <td><pre>!Concat [ $(HostedZone), "." ]</pre></td>
-   </tr>
-   <tr>
-      <td><pre>{ "Fn::Base64" : "#!/bin/bash\necho 'Running script...'" }</pre></td>
-      <td><pre>!Base64 "#!/bin/bash\necho 'running script...'"</pre></td>
-   </tr>
-</table>
+##### Reference
+
+CloudFormation: `{ "Ref" : "InstanceType" }`
+
+YAML Type: `!Ref InstanceType`
+
+##### Mapping Reference
+
+CloudFormation: `{ "FindInMap" : [ "SubnetConfig", "VPC", "CIDR" ] }`
+
+YAML Type: `!FindInMap [ SubnetConfig, VPC, CIDR ]`
+
+##### Attribute Reference
+
+CloudFormation: `{ "Fn::GetAtt" : [ "Ec2Instance", "PublicIp" ] }`
+
+YAML Type: `!GetAtt [ Ec2Instance, PublicIp ]`
+
+##### Base64 String
+
+CloudFormation: `{ "Fn::Base64" : "#!/bin/bash\necho 'Running script...'" }`
+
+YAML Type: `!Base64 "#!/bin/bash\necho 'running script...'"`
 
 ## Goals
 
