@@ -79,7 +79,7 @@ def project
 end
 
 def file_system
-    @file_system ||= Cfoo::FileSystem.new(project_root)
+    @file_system ||= Cfoo::FileSystem.new(project_root, Cfoo::YamlParser.new)
 end
 
 def project_root

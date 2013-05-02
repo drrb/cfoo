@@ -11,7 +11,8 @@ end
 
 filenames = ARGV
 
-file_system = Cfoo::FileSystem.new(".")
+yaml_parser = Cfoo::YamlParser.new
+file_system = Cfoo::FileSystem.new(".", yaml_parser)
 project = Cfoo::Project.new(file_system)
 parser = Cfoo::Parser.new(file_system)
 processor = Cfoo::Processor.new(parser, project)
