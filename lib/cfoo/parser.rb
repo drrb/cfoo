@@ -73,6 +73,10 @@ module Cfoo
 
         def parse_file(file_name)
             @file_system.parse_file(file_name).expand_el
+        rescue Parslet::ParseFailed => failure
+           puts "Failed to parse '#{file_name}':"
+           puts failure.cause.ascii_tree
+           raise failure
         end
     end
 end

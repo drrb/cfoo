@@ -12,9 +12,8 @@ module Cfoo
 
             tree = parser.parse(string)
             transform.apply(tree)
-        rescue Parslet::ParseFailed => failure
-            #TODO: handle this properly
-            raise failure
+        #rescue Parslet::ParseFailed => failure
+        #    #TODO: handle this properly
         end
 
         rule(:space) { match('\s') }
