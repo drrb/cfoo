@@ -41,3 +41,28 @@ Feature: Expand EL Mapping References
         }
         """
 
+    Scenario: Map key is reference
+        Given I have a file "nat.yml" containing
+        """
+        Resources:
+            NATDevice:
+                Type: AWS::EC2::Instance
+                Properties:
+                    ImageId: $(AWSNATAMI[$(AWS::Region)][AMI])
+        """
+        When I process "nat.yml"
+        Then the output should match JSON
+        """
+        {
+            "AWSTemplateFormatVersion" : "2010-09-09",
+            "Resources" : {
+                "NATDevice" : {
+                    "Type" : "AWS::EC2::Instance",
+                    "Properties" : {
+                        "ImageId" : { "Fn::FindInMap" : [ "AWSNATAMI" , { "Ref" : "AWS::Region" } , "AMI" ] }
+                    }
+                }
+            }
+        }
+        """
+

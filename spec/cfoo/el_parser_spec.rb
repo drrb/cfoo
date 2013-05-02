@@ -36,7 +36,7 @@ module Cfoo
         end
 
         it "copes with EL in maps" do
-            parser.parse("$(fruit[$(fruitType)][$(fruitProperty)])").should == {"Fn::FindInMap" => ["fruit", {"Ref" => "fruitType"}, {"Ref" => "fruitProperty"}]}
+            parser.parse("$(Fruit[$(AWS::FruitType)][$(FruitProperty)])").should == {"Fn::FindInMap" => ["Fruit", {"Ref" => "AWS::FruitType"}, {"Ref" => "FruitProperty"}]}
         end
 
         it "copes with EL in references" do
