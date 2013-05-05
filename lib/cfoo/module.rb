@@ -17,9 +17,5 @@ module Cfoo
         def eql?(other)
             dir = other.dir
         end
-        
-        def to_s
-            "Module[#{dir}]"
-        end
     end
 end
