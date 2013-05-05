@@ -20,12 +20,14 @@ Cfoo can be installed as a Ruby Gem
 1. Write your CloudFormation templates using Cfoo YAML 
 
 2. Turn your Cfoo templates into normal CloudFormation templates
-
-    $ cfoo web-server-template.yml database-template.yml > web-stack.template.json
+```terminal
+$ cfoo web-server-template.yml database-template.yml > web-stack.template.json`
+```
 
 3. Create your stack with CloudFormation
-
-    $ cfn-create-stack --stack-name WebStack -f web-stack.template.json 
+```terminal
+$ cfn-create-stack --stack-name WebStack -f web-stack.template.json`
+```
 
 ## Templates
 
