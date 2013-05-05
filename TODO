@@ -9,6 +9,7 @@ Better errors when parsing fails
 Split into resources/mappings/parameters/etc by putting templates into directories with those names
 Allow directory for raw templates
 Allow traditional JSON CloudFormation templates (including modules, splitting, etc)
+Expose parser, for use with Fog (github fog/fog)
 Vim highlighting
 Use multi-json instead of json gem (spec.add_dependency 'multi_json', '~> 1.0')
 Disablable warnings about naming conventions
