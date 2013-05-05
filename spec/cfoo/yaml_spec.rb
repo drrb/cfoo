@@ -19,8 +19,15 @@ module YAML
             left.should_not == right
          end
          it "returns false when domains are different" do
-            left = DomainType.create("type", "value_1")
-            right = DomainType.create("type", "value_2")
+            left = DomainType.create("type", "value")
+            right = DomainType.create("type", "value")
+            left.domain = "some domain"
+            right.domain = "some other domain"
+            left.should_not == right
+         end
+         it "returns false when other type is not a domain type" do
+            left = DomainType.create("type", "value")
+            right = "not a domain type"
             left.should_not == right
          end
       end
