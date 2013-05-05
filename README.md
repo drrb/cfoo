@@ -118,7 +118,6 @@ Cfoo Shortcut: `$(HostedZone).`
 ### YAML Types
 
 Cfoo gives you the option of using YAML custom data-types where it helps to make your templates easier to read.
-The table below uses inline YAML lists, but multiline lists can also be used.
 
 ##### Reference
 
@@ -143,6 +142,13 @@ YAML Type: `!GetAtt [ Ec2Instance, PublicIp ]`
 CloudFormation: `{ "Fn::Base64" : "#!/bin/bash\necho 'Running script...'" }`
 
 YAML Type: `!Base64 "#!/bin/bash\necho 'running script...'"`
+
+Alternative YAML Type:
+```yaml
+!Base64 |
+    #!/bin/bash
+    echo 'running script...'
+```
 
 ## Goals
 
