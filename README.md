@@ -186,9 +186,8 @@ Cfoo aims to let developers simplify CloudFormation templates by:
 
 ### Secondary Goals
 
-Cfoo aims (subject to Primary Goals) to:
+Cfoo also aims (subject to Primary Goals) to:
 
-- allow all aspects of CloudFormation templates to be expressed in YAML (so you don't need to use JSON)
 - allow inclusion existing JSON templates (so you don't have to switch all at once)
 
 ### Non-goals
