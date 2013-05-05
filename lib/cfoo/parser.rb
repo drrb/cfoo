@@ -65,6 +65,18 @@ end
 module Cfoo
     class Parser
         class ElParseError < RuntimeError
+            def initialize(message, parslet_failure = nil)
+                super(message)
+                @parslet_failure = parslet_failure
+            end
+
+            def message
+                if @parslet_failure
+                    super + "\n#{@parslet_failure.cause.ascii_tree}"
+                else
+                    super
+                end
+            end
         end
 
         def initialize(file_system)
@@ -74,9 +86,7 @@ module Cfoo
         def parse_file(file_name)
             @file_system.parse_file(file_name).expand_el
         rescue Parslet::ParseFailed => failure
-           puts "Failed to parse '#{file_name}':"
-           puts failure.cause.ascii_tree
-           raise failure
+           raise ElParseError.new("Failed to parse '#{file_name}':", failure)
         end
     end
 end
