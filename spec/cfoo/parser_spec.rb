@@ -106,6 +106,11 @@ module Cfoo
 
                     parser.parse_file("b64.yml").should == {"Fn::Base64" => "myencodedstring"}
                 end
+                it "raises an error when finding other (unknown) domain types" do
+                    file_system.should_receive(:parse_file).with("domaintype.yml").and_return(YAML::DomainType.create("Unknown type", "unknowntypecontent"))
+
+                    expect {parser.parse_file("domaintype.yml")}.to raise_error /Couldn't parse object/
+                end
             end
 
             context "in an array" do
