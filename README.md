@@ -7,7 +7,8 @@
 [![Gem Version](https://badge.fury.io/rb/cfoo.png)](https://badge.fury.io/rb/cfoo)
 [![Dependency Status](https://gemnasium.com/drrb/cfoo.png)](https://gemnasium.com/drrb/cfoo)
 
-Write your CloudFormation templates in a YAML-based markup language
+Cfoo (pronounced "sifu") lets you write your [CloudFormation](https://aws.amazon.com/cloudformation)
+templates [in YAML](#templates), and makes it easier with some [helpers](#shortcuts).
 
 ## Installation
 
@@ -21,12 +22,12 @@ Cfoo can be installed as a Ruby Gem
 
 2. Turn your Cfoo templates into normal CloudFormation templates
 ```terminal
-$ cfoo web-server-template.yml database-template.yml > web-stack.template.json`
+$ cfoo web-server.template.yml database.template.yml > web-stack.template.json
 ```
 
 3. Create your stack with CloudFormation
 ```terminal
-$ cfn-create-stack --stack-name WebStack -f web-stack.template.json`
+$ cfn-create-stack --stack-name WebStack -f web-stack.template.json
 ```
 
 ## Templates
