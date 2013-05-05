@@ -121,27 +121,51 @@ Cfoo gives you the option of using YAML custom data-types where it helps to make
 
 ##### Reference
 
-CloudFormation: `{ "Ref" : "InstanceType" }`
+CloudFormation:
+```json
+{ "Ref" : "InstanceType" }
+```
 
-YAML Type: `!Ref InstanceType`
+YAML Type:
+```yaml
+!Ref InstanceType
+```
 
 ##### Mapping Reference
 
-CloudFormation: `{ "FindInMap" : [ "SubnetConfig", "VPC", "CIDR" ] }`
+CloudFormation:
+```json
+{ "FindInMap" : [ "SubnetConfig", "VPC", "CIDR" ] }
+```
 
-YAML Type: `!FindInMap [ SubnetConfig, VPC, CIDR ]`
+YAML Type:
+```yaml
+!FindInMap [ SubnetConfig, VPC, CIDR ]
+```
 
 ##### Attribute Reference
 
-CloudFormation: `{ "Fn::GetAtt" : [ "Ec2Instance", "PublicIp" ] }`
+CloudFormation:
+```json
+{ "Fn::GetAtt" : [ "Ec2Instance", "PublicIp" ] }
+```
 
-YAML Type: `!GetAtt [ Ec2Instance, PublicIp ]`
+YAML Type:
+```yaml
+!GetAtt [ Ec2Instance, PublicIp ]
+```
 
 ##### Base64 String
 
-CloudFormation: `{ "Fn::Base64" : "#!/bin/bash\necho 'Running script...'" }`
+CloudFormation:
+```json
+{ "Fn::Base64" : "#!/bin/bash\necho 'Running script...'" }`
+```
 
-YAML Type: `!Base64 "#!/bin/bash\necho 'running script...'"`
+YAML Type:
+```yaml
+!Base64 "#!/bin/bash\necho 'running script...'"`
+```
 
 Alternative YAML Type:
 ```yaml
