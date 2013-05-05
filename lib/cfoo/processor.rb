@@ -1,15 +1,15 @@
 
 class Hash
-    def deep_merge(other)                                                            
-        merge(other) do |key, our_item, their_item|                                  
-            if our_item.respond_to? :deep_merge                                      
-                our_item.deep_merge(their_item)                                      
-            elsif our_item.respond_to? :concat                                       
-                our_item.concat(their_item).uniq                                     
-            else                                                                     
-                their_item                                                           
-            end                                                                      
-        end                                                                          
+    def deep_merge(other)
+        merge(other) do |key, our_item, their_item|
+            if [our_item, their_item].all? {|item| item.respond_to? :deep_merge }
+                our_item.deep_merge(their_item)
+            elsif [our_item, their_item].all? {|item| item.respond_to?(:+) && item.respond_to?(:uniq) }
+                our_item.concat(their_item).uniq
+            else
+                their_item
+            end
+        end
     end
 end
 
