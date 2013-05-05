@@ -4,7 +4,8 @@
 [![Coverage Status](https://coveralls.io/repos/drrb/cfoo/badge.png?branch=master)](https://coveralls.io/r/drrb/cfoo)
 [![Code Climate](https://codeclimate.com/github/drrb/cfoo.png)](https://codeclimate.com/github/drrb/cfoo)
 
-[![Gem Version](https://badge.fury.io/rb/cfoo.png)](http://badge.fury.io/rb/cfoo)
+[![Gem Version](https://badge.fury.io/rb/cfoo.png)](https://badge.fury.io/rb/cfoo)
+[![Dependency Status](https://gemnasium.com/drrb/cfoo.png)](https://gemnasium.com/drrb/cfoo)
 
 Write your CloudFormation templates in a YAML-based markup language
 
