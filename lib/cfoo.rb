@@ -8,4 +8,5 @@ require "cfoo/project"
 require "cfoo/renderer"
 require "cfoo/version"
 require "cfoo/yaml"
+require "cfoo/yaml_parser"
 
