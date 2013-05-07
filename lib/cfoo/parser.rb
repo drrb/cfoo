@@ -2,6 +2,14 @@ require 'cfoo/constants'
 require 'cfoo/el_parser'
 require 'cfoo/yaml'
 
+module Parslet
+    class Source
+        def str
+            @str
+        end
+    end
+end
+
 class Object
     def expand_el
         raise Cfoo::Parser::ElParseError, "Couldn't parse object '#{self}'. I don't know how to parse an instance of '#{self.class}'"
@@ -76,7 +84,8 @@ module Cfoo
 
             def message
                 if @parslet_failure
-                    super + "\n#{@parslet_failure.cause.ascii_tree}"
+                    cause = @parslet_failure.cause
+                    super + "\nSource: #{cause.source.str}\nCause: #{cause.ascii_tree}"
                 else
                     super
                 end
@@ -90,7 +99,7 @@ module Cfoo
         def parse_file(file_name)
             @file_system.parse_file(file_name).expand_el
         rescue Parslet::ParseFailed => failure
-           raise ElParseError.new("Failed to parse '#{file_name}':", failure)
+            raise ElParseError.new("Failed to parse '#{file_name}':", failure)
         end
     end
 end
