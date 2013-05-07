@@ -42,6 +42,10 @@ module Cfoo
         it "copes with EL in references" do
             parser.parse("$($(appleProperty))").should == {"Ref" => {"Ref" => "appleProperty"}}
         end
+
+        it "handles letters, numbers, underscores, and colons in identifiers" do
+            parser.parse("$(AWS::Hip_2_the_groove_identifier)").should == {"Ref" => "AWS::Hip_2_the_groove_identifier"}
+        end
     end
 end
 

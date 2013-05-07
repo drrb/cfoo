@@ -2,7 +2,6 @@ Features
 ----------
 More tests for EL parsing
 Spaces in EL?
-More than [A-Za-z:] in EL identifiers? Definitely need [0-9], but maybe [_-]. Maybe just whatever ruby allows?
 Allow lone dollar signs in strings? (escaping is only necessary if the dollar is in front of a bracket)
 Shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 
 Shorthand for Fn::GetAZs
