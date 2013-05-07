@@ -25,8 +25,9 @@ module Cfoo
         rule(:lbracket) { str('[') }
         rule(:rbracket) { str(']') }
         rule(:dot) { str('.') }
+        rule(:text_character) { match['^\\\\$'] }
         rule(:identifier) { match['a-zA-Z:'].repeat(1).as(:identifier) }
-        rule(:text) { match['^\\\\$'].repeat(1).as(:text) }
+        rule(:text) { text_character.repeat(1).as(:text) }
         rule(:attribute_reference) do
             (
                 expression.as(:reference) >> (
