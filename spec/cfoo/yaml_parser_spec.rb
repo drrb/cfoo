@@ -66,6 +66,11 @@ module Cfoo
 
                     parser.load_file("#{working_dir}/base64.yml").should == YAML::DomainType.create("Base64", "myencodedstring")
                 end
+                it "converts AZ lookups to GetAZs function-calls" do
+                    write "#{working_dir}/get_azs.yml", "!GetAZs myregion"
+
+                    parser.load_file("#{working_dir}/get_azs.yml").should == YAML::DomainType.create("GetAZs", "myregion")
+                end
             end
         end
 
