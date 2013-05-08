@@ -4,9 +4,7 @@ More tests for EL parsing
 Spaces in EL?
 Allow lone dollar signs in strings? (escaping is only necessary if the dollar is in front of a bracket)
 Shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 
-Shorthand for Fn::GetAZs: $(GetAZs())?
-Generic shorthand for functions?
-    - e.g. $(DoSomething(Arg1,Arg2,Arg3)) -> { "Fn::DoSomething", [Arg1, Arg2, Arg3] }
+Allow arrays as function args (e.g. $(Join("", [1,2,3])))
 Put function names in a constant
 Better errors when parsing fails
     - Parslet output is good, but check how much we can improve it by refactoring the parser
