@@ -7,6 +7,8 @@ Shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } )
 Allow arrays as function args (e.g. $(Join("", [1,2,3])))
 Better errors when parsing fails
     - Parslet output is good, but check how much we can improve it by refactoring the parser
+    - Print the EL string, and then search the file for it, printing the line/column numbers
+      (print both if you find two matches, because they're probably both wrong anyway!)
 Split into resources/mappings/parameters/etc by putting templates into directories with those names
 Allow traditional JSON CloudFormation templates (including modules, splitting, etc)
 Expose parser, for use with Fog (github fog/fog)
