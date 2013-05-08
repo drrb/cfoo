@@ -1,3 +1,4 @@
+require 'cfoo/constants'
 require 'cfoo/el_parser'
 require 'cfoo/yaml'
 
@@ -46,20 +47,23 @@ class Hash
 end
 
 module YAML
-   class DomainType
-      def expand_el
-         case type_id
-         when "Ref"
-            { "Ref" => value.expand_el }
-         when /^(Base64|FindInMap|GetAtt|GetAZs|Join)$/
-            { "Fn::#{type_id}" => value.expand_el }
-         when "Concat"
-            { "Fn::Join" => ['', value.expand_el] }
-         else
-            super
-         end 
-      end
-   end
+    class DomainType
+
+        CLOUDFORMATION_FUNCTION_REGEX = %r[^(#{::Cfoo::CLOUDFORMATION_FUNCTIONS.join '|'})$]
+
+        def expand_el
+            case type_id
+            when "Ref"
+                { "Ref" => value.expand_el }
+            when CLOUDFORMATION_FUNCTION_REGEX
+                { "Fn::#{type_id}" => value.expand_el }
+            when "Concat"
+                { "Fn::Join" => ['', value.expand_el] }
+            else
+                super
+            end 
+        end
+    end
 end
 
 module Cfoo

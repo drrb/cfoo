@@ -1,5 +1,6 @@
 require "cfoo/array"
 require "cfoo/cfoo"
+require "cfoo/constants"
 require "cfoo/el_parser"
 require "cfoo/file_system"
 require "cfoo/module"

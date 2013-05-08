@@ -1,9 +1,10 @@
+require 'cfoo/constants'
 require 'cfoo/yaml'
 
 module Cfoo
     class YamlParser
 
-        CFN_DOMAIN_TYPES = [ "GetAZs", "Ref", "Join", "Concat", "GetAtt", "FindInMap", "Base64" ]
+        CFN_DOMAIN_TYPES = ::Cfoo::CLOUDFORMATION_FUNCTIONS + %w[Ref Concat]
 
         def load_file(file_name)
             #TODO: raise errors if "value" isn't the right type
