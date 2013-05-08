@@ -50,7 +50,7 @@ module Cfoo
             (
                 identifier.as(:function) >>
                 lparen >>
-                (identifier >> (comma >> identifier).repeat).as(:arguments).maybe >>
+                (expression >> (comma >> expression).repeat).as(:arguments).maybe >>
                 rparen
             ).as(:function_call)
         end
@@ -98,7 +98,7 @@ module Cfoo
             { "Fn::#{function}" => argument }
         end
 
-        rule(:function_call => { :function => simple(:function), :arguments => sequence(:arguments) }) do
+        rule(:function_call => { :function => simple(:function), :arguments => subtree(:arguments) }) do
             { "Fn::#{function}" => arguments }
         end
 

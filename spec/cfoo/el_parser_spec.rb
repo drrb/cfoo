@@ -47,6 +47,11 @@ module Cfoo
             it 'copes with spaces between around function arguments' do
                 parser.parse("$(Fruit(  One   , Two ,Three   ))").should == {"Fn::Fruit" => [ "One", "Two", "Three" ]}
             end
+
+            it 'copes with EL as arguments' do
+                parser.parse("$(FindInMap(AWSRegionArch2AMI, $(AWS::Region), $(AWSInstanceType2Arch[FrontendInstanceType][Arch])))").
+                    should == {"Fn::FindInMap" => ["AWSRegionArch2AMI", {"Ref" => "AWS::Region"}, { "Fn::FindInMap" => ["AWSInstanceType2Arch", "FrontendInstanceType", "Arch"] }]}
+            end
         end
 
         it "doesn't expand escaped EL" do

@@ -115,3 +115,26 @@ Feature: Expand Function Calls
             }
         }
         """
+
+    @wip
+    Scenario: Function with embedded EL
+        Given I have a file "app_servers.yml" containing
+        """
+        AppServerLaunchConfig:
+            Type: AWS::AutoScaling::LaunchConfiguration
+            Properties:
+                ImageId: $(FindInMap(AWSRegionArch2AMI, $(AWS::Region), $(AWSInstanceType2Arch[$(FrontendInstanceType)][Arch])))
+        """
+        When I process "app_servers.yml"
+        Then the output should match JSON
+        """
+        {
+            "AWSTemplateFormatVersion" : "2010-09-09",
+            "AppServerLaunchConfig" : {
+                "Type": "AWS::AutoScaling::LaunchConfiguration",
+                "Properties" : {
+                    "ImageId": { "Fn::FindInMap" : [ "AWSRegionArch2AMI", { "Ref" : "AWS::Region" }, { "Fn::FindInMap" : [ "AWSInstanceType2Arch", { "Ref" : "FrontendInstanceType" }, "Arch" ] } ] }
+                }
+            }
+        }
+        """
