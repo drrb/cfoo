@@ -27,8 +27,12 @@ module Cfoo
             parser.parse("$(fruit[apple][color])").should == {"Fn::FindInMap" => ["fruit", "apple", "color"]}
         end
 
-        it 'turns no-arg function calls into "Fn" maps with an empty string for an argument' do
+        it 'turns no-arg function calls into "Fn" maps with an empty string as the value' do
             parser.parse("$(Fruit())").should == {"Fn::Fruit" => ""}
+        end
+
+        it 'turns single-arg function calls into "Fn" maps with the string as the value' do
+            parser.parse("$(Fruit(Favorite))").should == {"Fn::Fruit" => "Favorite"}
         end
 
         it "doesn't expand escaped EL" do

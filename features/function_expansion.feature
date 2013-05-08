@@ -19,7 +19,29 @@ Feature: Expand Function Calls
             "WebServerGroup" : {
                "Type" : "AWS::AutoScaling::AutoScalingGroup",
                "Properties" : {
-                 "AvailabilityZones" : { "Fn::GetAZs" : ""}
+                 "AvailabilityZones" : { "Fn::GetAZs" : "" }
+               }
+            }
+        }
+        """
+
+    Scenario: Function with one parameter
+        Given I have a file "autoscaling_group.yml" containing
+        """
+        WebServerGroup:
+           Type: AWS::AutoScaling::AutoScalingGroup
+           Properties:
+               AvailabilityZones: $(GetAZs(us-east-1))
+        """
+        When I process "autoscaling_group.yml"
+        Then the output should match JSON
+        """
+        {
+            "AWSTemplateFormatVersion" : "2010-09-09",
+            "WebServerGroup" : {
+               "Type" : "AWS::AutoScaling::AutoScalingGroup",
+               "Properties" : {
+                 "AvailabilityZones" : { "Fn::GetAZs" : "us-east-1" }
                }
             }
         }

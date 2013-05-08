@@ -26,7 +26,7 @@ module Cfoo
         rule(:rbracket) { str(']') }
         rule(:dot) { str('.') }
         rule(:text_character) { match['^\\\\$'] }
-        rule(:identifier) { match['a-zA-Z0-9_:'].repeat(1).as(:identifier) }
+        rule(:identifier) { match['a-zA-Z0-9_\-:'].repeat(1).as(:identifier) }
         rule(:text) { text_character.repeat(1).as(:text) }
         rule(:attribute_reference) do
             (
@@ -45,7 +45,8 @@ module Cfoo
         end
         rule(:function_call) do
             (
-                identifier.as(:function) >> str("()")
+                identifier.as(:function) >>
+                str("(") >> identifier.as(:argument).maybe >> str(")")
             ).as(:function_call)
         end
         rule(:reference) do
@@ -86,6 +87,10 @@ module Cfoo
 
         rule(:function_call => { :function => simple(:function) }) do
             { "Fn::#{function}" => "" }
+        end
+
+        rule(:function_call => { :function => simple(:function), :argument => simple(:argument) }) do
+            { "Fn::#{function}" => argument }
         end
 
         rule(:mapping => { :map => subtree(:map), :key => subtree(:key), :value => subtree(:value)}) do
