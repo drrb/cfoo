@@ -43,13 +43,18 @@ module Cfoo
                 str("[") >> expression.as(:value) >> str("]")
             ).as(:mapping)
         end
+        rule(:function_call) do
+            (
+                identifier.as(:function) >> str("()")
+            ).as(:function_call)
+        end
         rule(:reference) do
             expression.as(:reference)
         end
 
         rule(:expression) { el | identifier }
         rule(:el) do
-            str("$(") >> ( mapping | attribute_reference | reference ) >> str(")")
+            str("$(") >> ( mapping | attribute_reference | function_call | reference ) >> str(")")
         end
         rule(:string) do
             ( escaped_dollar | lone_backslash | el | text ).repeat.as(:string)
@@ -75,12 +80,16 @@ module Cfoo
             { "Ref" => reference }
         end
 
-        rule(:mapping => { :map => subtree(:map), :key => subtree(:key), :value => subtree(:value)}) do
-            { "Fn::FindInMap" => [map, key, value] }
-        end
-
         rule(:attribute_reference => { :reference => subtree(:reference), :attribute => subtree(:attribute)}) do
             { "Fn::GetAtt" => [ reference, attribute ] }
+        end
+
+        rule(:function_call => { :function => simple(:function) }) do
+            { "Fn::#{function}" => "" }
+        end
+
+        rule(:mapping => { :map => subtree(:map), :key => subtree(:key), :value => subtree(:value)}) do
+            { "Fn::FindInMap" => [map, key, value] }
         end
 
         rule(:string => subtree(:string)) do
