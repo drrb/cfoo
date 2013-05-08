@@ -27,24 +27,26 @@ module Cfoo
             parser.parse("$(fruit[apple][color])").should == {"Fn::FindInMap" => ["fruit", "apple", "color"]}
         end
 
-        it 'turns no-arg function calls into "Fn" maps with an empty string as the value' do
-            parser.parse("$(Fruit())").should == {"Fn::Fruit" => ""}
-        end
+        context "parsing function calls" do
+            it 'turns no-arg function calls into "Fn" maps with an empty string as the value' do
+                parser.parse("$(Fruit())").should == {"Fn::Fruit" => ""}
+            end
 
-        it 'turns single-arg function calls into "Fn" maps with the string as the value' do
-            parser.parse("$(Fruit(Favorite))").should == {"Fn::Fruit" => "Favorite"}
-        end
+            it 'turns single-arg function calls into "Fn" maps with the string as the value' do
+                parser.parse("$(Fruit(Favorite))").should == {"Fn::Fruit" => "Favorite"}
+            end
 
-        it 'turns multi-arg function calls into "Fn" maps with the an array of the arg strings as the value' do
-            parser.parse("$(Fruit(One, Two, Three))").should == {"Fn::Fruit" => [ "One", "Two", "Three" ]}
-        end
+            it 'turns multi-arg function calls into "Fn" maps with the an array of the arg strings as the value' do
+                parser.parse("$(Fruit(One, Two, Three))").should == {"Fn::Fruit" => [ "One", "Two", "Three" ]}
+            end
 
-        it 'copes with no spaces between function arguments' do
-            parser.parse("$(Fruit(One,Two,Three))").should == {"Fn::Fruit" => [ "One", "Two", "Three" ]}
-        end
+            it 'copes with no spaces between function arguments' do
+                parser.parse("$(Fruit(One,Two,Three))").should == {"Fn::Fruit" => [ "One", "Two", "Three" ]}
+            end
 
-        it 'copes with spaces between around function arguments' do
-            parser.parse("$(Fruit(  One   , Two ,Three   ))").should == {"Fn::Fruit" => [ "One", "Two", "Three" ]}
+            it 'copes with spaces between around function arguments' do
+                parser.parse("$(Fruit(  One   , Two ,Three   ))").should == {"Fn::Fruit" => [ "One", "Two", "Three" ]}
+            end
         end
 
         it "doesn't expand escaped EL" do

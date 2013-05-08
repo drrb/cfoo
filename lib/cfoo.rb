@@ -1,3 +1,4 @@
+require "cfoo/array"
 require "cfoo/cfoo"
 require "cfoo/el_parser"
 require "cfoo/file_system"

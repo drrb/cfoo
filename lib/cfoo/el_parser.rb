@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'parslet'
+require 'cfoo/array'
 
 module Cfoo
     class ElParser < Parslet::Parser
@@ -105,18 +106,9 @@ module Cfoo
             { "Fn::FindInMap" => [map, key, value] }
         end
 
-        rule(:string => subtree(:string)) do
-            # Join escaped EL with adjacent strings
-            parts = string.inject(['']) do |combined_parts, part|
-                previous = combined_parts.pop
-                if previous.class == String && part.class == String
-                    combined_parts << previous + part
-                else
-                    combined_parts << previous << part
-                end
-            end
-
-            parts.reject! {|part| part.empty? }
+        rule(:string => subtree(:string_parts)) do
+            # EL is parsed separately from other strings
+            parts = string_parts.join_adjacent_strings
 
             if parts.size == 1
                 parts.first
