@@ -16,18 +16,20 @@ module Cfoo
         #    #TODO: handle this properly
         end
 
-        rule(:space) { match('\s') }
+        rule(:space) { match('\s').repeat(1) }
         rule(:space?) { space.maybe }
         rule(:escaped_dollar) { str('\$').as(:escaped_dollar) }
         rule(:lone_backslash) { str('\\').as(:lone_backslash) }
-        rule(:lparen) { str('(') }
+        rule(:lparen) { str('(') >> space? }
         rule(:rparen) { str(')') }
         rule(:lbracket) { str('[') }
         rule(:rbracket) { str(']') }
         rule(:dot) { str('.') }
+        rule(:comma) { str(",") >> space? }
         rule(:text_character) { match['^\\\\$'] }
-        rule(:identifier) { match['a-zA-Z0-9_\-:'].repeat(1).as(:identifier) }
+        rule(:identifier) { match['a-zA-Z0-9_\-:'].repeat(1).as(:identifier) >> space? }
         rule(:text) { text_character.repeat(1).as(:text) }
+
         rule(:attribute_reference) do
             (
                 expression.as(:reference) >> (
@@ -46,7 +48,9 @@ module Cfoo
         rule(:function_call) do
             (
                 identifier.as(:function) >>
-                str("(") >> identifier.as(:argument).maybe >> str(")")
+                lparen >>
+                (identifier >> (comma >> identifier).repeat).as(:arguments).maybe >>
+                rparen
             ).as(:function_call)
         end
         rule(:reference) do
@@ -89,8 +93,12 @@ module Cfoo
             { "Fn::#{function}" => "" }
         end
 
-        rule(:function_call => { :function => simple(:function), :argument => simple(:argument) }) do
+        rule(:function_call => { :function => simple(:function), :arguments => simple(:argument) }) do
             { "Fn::#{function}" => argument }
+        end
+
+        rule(:function_call => { :function => simple(:function), :arguments => sequence(:arguments) }) do
+            { "Fn::#{function}" => arguments }
         end
 
         rule(:mapping => { :map => subtree(:map), :key => subtree(:key), :value => subtree(:value)}) do

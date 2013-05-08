@@ -46,3 +46,72 @@ Feature: Expand Function Calls
             }
         }
         """
+
+    Scenario: Function with multiple parameters
+        Given I have a file "autoscaling_group.yml" containing
+        """
+        FrontendFleet:
+            Type: AWS::AutoScaling::AutoScalingGroup
+            Properties:
+                AvailabilityZones:
+                    - $(GetAtt(PrivateSubnet, AvailabilityZone))
+        """
+        When I process "autoscaling_group.yml"
+        Then the output should match JSON
+        """
+        {
+            "AWSTemplateFormatVersion" : "2010-09-09",
+            "FrontendFleet" : {
+                "Type" : "AWS::AutoScaling::AutoScalingGroup",
+                "Properties" : {
+                    "AvailabilityZones" : [{ "Fn::GetAtt" : [ "PrivateSubnet", "AvailabilityZone" ] }]
+                }
+            }
+        }
+        """
+
+    Scenario: Function with no spaces between arguments
+        Given I have a file "autoscaling_group.yml" containing
+        """
+        FrontendFleet:
+            Type: AWS::AutoScaling::AutoScalingGroup
+            Properties:
+                AvailabilityZones:
+                    - $(GetAtt(PrivateSubnet,AvailabilityZone))
+        """
+        When I process "autoscaling_group.yml"
+        Then the output should match JSON
+        """
+        {
+            "AWSTemplateFormatVersion" : "2010-09-09",
+            "FrontendFleet" : {
+                "Type" : "AWS::AutoScaling::AutoScalingGroup",
+                "Properties" : {
+                    "AvailabilityZones" : [{ "Fn::GetAtt" : [ "PrivateSubnet", "AvailabilityZone" ] }]
+                }
+            }
+        }
+        """
+
+    Scenario: Function with lots of spaces between and around arguments
+        Given I have a file "autoscaling_group.yml" containing
+        """
+        FrontendFleet:
+            Type: AWS::AutoScaling::AutoScalingGroup
+            Properties:
+                AvailabilityZones:
+                    - $(GetAtt(  PrivateSubnet  ,  AvailabilityZone  ))
+        """
+        When I process "autoscaling_group.yml"
+        Then the output should match JSON
+        """
+        {
+            "AWSTemplateFormatVersion" : "2010-09-09",
+            "FrontendFleet" : {
+                "Type" : "AWS::AutoScaling::AutoScalingGroup",
+                "Properties" : {
+                    "AvailabilityZones" : [{ "Fn::GetAtt" : [ "PrivateSubnet", "AvailabilityZone" ] }]
+                }
+            }
+        }
+        """

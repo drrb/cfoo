@@ -35,6 +35,18 @@ module Cfoo
             parser.parse("$(Fruit(Favorite))").should == {"Fn::Fruit" => "Favorite"}
         end
 
+        it 'turns multi-arg function calls into "Fn" maps with the an array of the arg strings as the value' do
+            parser.parse("$(Fruit(One, Two, Three))").should == {"Fn::Fruit" => [ "One", "Two", "Three" ]}
+        end
+
+        it 'copes with no spaces between function arguments' do
+            parser.parse("$(Fruit(One,Two,Three))").should == {"Fn::Fruit" => [ "One", "Two", "Three" ]}
+        end
+
+        it 'copes with spaces between around function arguments' do
+            parser.parse("$(Fruit(  One   , Two ,Three   ))").should == {"Fn::Fruit" => [ "One", "Two", "Three" ]}
+        end
+
         it "doesn't expand escaped EL" do
             parser.parse("\\$(apple.color) apple").should == "$(apple.color) apple"
         end
