@@ -26,7 +26,7 @@ When /^I build the project$/ do
     cfoo.build_project
 end
 
-Then(/^the output should match JSON$/) do |expected_json|
+Then /^the output should match JSON$/ do |expected_json|
     begin
         expected = JSON.parse(expected_json)
     rescue StandardError => e
@@ -40,6 +40,14 @@ Then(/^the output should match JSON$/) do |expected_json|
         raise e
     end
     actual.should == expected
+end
+
+Then /^I should see "(.*?)"$/ do |expected_output|
+    stdout.messages.join("\n").should include expected_output
+end
+
+Then /^I should see an error containing "(.*?)"$/ do |expected_output|
+    stderr.messages.join("\n").should include expected_output
 end
 
 def write_file(filename, content)
@@ -59,7 +67,7 @@ def resolve_file(filename)
 end
 
 def cfoo
-    @cfoo ||= Cfoo::Cfoo.new(processor, renderer, stdout)
+    @cfoo ||= Cfoo::Cfoo.new(processor, renderer, stdout, stderr)
 end
 
 def processor
@@ -89,6 +97,10 @@ def project_root
 end
 
 def stdout
+    @output ||= Output.new
+end
+
+def stderr
     @output ||= Output.new
 end
 

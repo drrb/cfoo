@@ -116,7 +116,6 @@ Feature: Expand Function Calls
         }
         """
 
-    @wip
     Scenario: Function with embedded EL
         Given I have a file "app_servers.yml" containing
         """

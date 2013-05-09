@@ -8,11 +8,11 @@ module Cfoo
         describe "#parse_file" do
             context "when parsing fails" do
                 it "raises an error" do
-                    error = Parslet::ParseFailed.new "Fail"
-                    file_system.should_receive(:parse_file).and_raise error
-                    expect { parser.parse_file("myfile.yml") }.to raise_error Parser::ElParseError
+                    file_system.should_receive(:parse_file).and_raise "parsing failed"
+                    expect { parser.parse_file("myfile.yml") }.to raise_error Parser::ElParseError, "Failed to parse 'myfile.yml':\nparsing failed"
                 end
             end
+
             context "when processing a normal array" do
                 it "returns it" do
                     file_system.should_receive(:parse_file).with("myfile.yml").and_return([1, 2, 3])

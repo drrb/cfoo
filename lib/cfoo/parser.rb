@@ -1,5 +1,6 @@
 require 'cfoo/constants'
 require 'cfoo/el_parser'
+require 'cfoo/parslet'
 require 'cfoo/yaml'
 
 module Parslet
@@ -77,19 +78,6 @@ end
 module Cfoo
     class Parser
         class ElParseError < RuntimeError
-            def initialize(message, parslet_failure = nil)
-                super(message)
-                @parslet_failure = parslet_failure
-            end
-
-            def message
-                if @parslet_failure
-                    cause = @parslet_failure.cause
-                    super + "\nSource: #{cause.source.str}\nCause: #{cause.ascii_tree}"
-                else
-                    super
-                end
-            end
         end
 
         def initialize(file_system)
@@ -99,7 +87,9 @@ module Cfoo
         def parse_file(file_name)
             @file_system.parse_file(file_name).expand_el
         rescue Parslet::ParseFailed => failure
-            raise ElParseError.new("Failed to parse '#{file_name}':", failure)
+            raise ElParseError, "Failed to parse '#{file_name}':\n#{failure.render}"
+        rescue Exception => failure
+            raise ElParseError, "Failed to parse '#{file_name}':\n#{failure}"
         end
     end
 end
