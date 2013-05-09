@@ -8,7 +8,6 @@ Allow arrays as function args (e.g. $(Join("", [1,2,3])))
 Better errors when parsing fails
     - Parslet output is good, but check how much we can improve it by refactoring the parser
 Split into resources/mappings/parameters/etc by putting templates into directories with those names
-Allow directory for raw templates (I've forgotten what I meant by this one!)
 Allow traditional JSON CloudFormation templates (including modules, splitting, etc)
 Expose parser, for use with Fog (github fog/fog)
 Vim highlighting
