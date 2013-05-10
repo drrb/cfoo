@@ -78,6 +78,7 @@ end
 
 module Cfoo
     class Parser
+        #TODO: this doesn't only represent EL parsing errors. It wraps all parsing errors (below)
         class ElParseError < RuntimeError
         end
 
