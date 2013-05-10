@@ -11,7 +11,7 @@ end
 
 filenames = ARGV
 
-factory = Factory.new(STDOUT, STDERR)
+factory = Cfoo::Factory.new(STDOUT, STDERR)
 cfoo = factory.cfoo
 
 if filenames.empty?
