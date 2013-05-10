@@ -26,6 +26,36 @@ module Cfoo
             end
         end
 
+        describe "#open" do
+            it "opens a file on disk for reading and passes it to the provided block" do
+                write_project_file "file.txt", "test content"
+
+                actual_content = "block not called"
+                file_system.open("file.txt") do |file|
+                    actual_content = file.read
+                end
+
+                actual_content.should include "test content"
+            end
+        end
+
+        describe "#find_coordinates" do
+            it "returns the coordinates of the first match of the specified string in the specified file" do
+                write_project_file "test.txt", <<-EOF
+                    the quick brown fox
+                    jumps over the lazy
+                    dog
+                    the quick brown fox
+                    jumps over the lazy
+                    dog
+                EOF
+
+                row, column = file_system.find_coordinates("lazy", "test.txt")
+                row.should be 2
+                column.should be 36
+            end
+        end
+
         describe "#glob_relative" do
             it "returns relative path of files, resolved relative to project root" do
                 files = %w[a b c].map {|file| File.join(project_root, "modules", file) }
@@ -52,10 +82,18 @@ module Cfoo
             end
         end
 
+        def relative(file)
+            File.join(project_root, file)
+        end
+
         def write(file, content)
             File.open(file, "w+") do |f|
                 f.puts content
             end
+        end
+
+        def write_project_file(file, content)
+            write(relative(file), content)
         end
     end
 end

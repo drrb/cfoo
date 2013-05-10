@@ -1,7 +1,8 @@
 require 'cfoo/constants'
 require 'cfoo/el_parser'
-require 'cfoo/parslet'
 require 'cfoo/yaml'
+require 'rubygems'
+require 'parslet'
 
 module Parslet
     class Source
@@ -87,7 +88,11 @@ module Cfoo
         def parse_file(file_name)
             @file_system.parse_file(file_name).expand_el
         rescue Parslet::ParseFailed => failure
-            raise ElParseError, "Failed to parse '#{file_name}':\n#{failure.render}"
+            #TODO: unit test this somehow
+            cause = failure.cause
+            source = cause.source.str
+            row, column = @file_system.find_coordinates(source, file_name)
+            raise ElParseError, "Failed to parse '#{file_name}':\nSource: #{source}\nLocation: #{file_name} line #{row}, column #{column} \nCause: #{cause.ascii_tree}"
         rescue Exception => failure
             raise ElParseError, "Failed to parse '#{file_name}':\n#{failure}"
         end
