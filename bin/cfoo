@@ -11,13 +11,8 @@ end
 
 filenames = ARGV
 
-yaml_parser = Cfoo::YamlParser.new
-file_system = Cfoo::FileSystem.new(".", yaml_parser)
-project = Cfoo::Project.new(file_system)
-parser = Cfoo::Parser.new(file_system)
-processor = Cfoo::Processor.new(parser, project)
-renderer = Cfoo::Renderer.new
-cfoo = Cfoo::Cfoo.new(processor, renderer, STDOUT)
+factory = Factory.new(STDOUT, STDERR)
+cfoo = factory.cfoo
 
 if filenames.empty?
     cfoo.build_project
