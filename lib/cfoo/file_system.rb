@@ -21,17 +21,17 @@ module Cfoo
         def find_coordinates(string, file_name)
             matching_lines = []
             open(file_name) do |file|
-                file.each_with_index do|line, line_index|
+                file.each_with_index do|line, row_index|
                     if line.include? string
                         column_index = line.index(string)
-                        matching_lines << [line_index + 1, column_index + 1]
+                        row = row_index + 1
+                        column = column_index + 1
+                        return [row, column]
                     end
                 end
             end
-            matching_line = matching_lines.first
-            row = matching_line.first
-            column = matching_line.last
-            [row, column]
+            #TODO test this
+            raise "Couldn't find '#{string}' in '#{file}'"
         end
 
         def glob_relative(path)
