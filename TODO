@@ -5,8 +5,6 @@ Spaces in EL?
 Allow lone dollar signs in strings? (escaping is only necessary if the dollar is in front of a bracket)
 Shorthand for AWS variables (e.g. { "Ref" : "AWS::StackId" } ) 
 Allow arrays as function args (e.g. $(Join("", [1,2,3])))
-Better errors when parsing fails
-    - Parslet output is good, but check how much we can improve it by refactoring the parser
 Split into resources/mappings/parameters/etc by putting templates into directories with those names
 Allow traditional JSON CloudFormation templates (including modules, splitting, etc)
 Expose parser, for use with Fog (github fog/fog)
@@ -24,7 +22,6 @@ Tests
 
 Tasks
 ----------
-Refactor EL parser
 
 Bugs
 ----------
