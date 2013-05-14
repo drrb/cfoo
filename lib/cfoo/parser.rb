@@ -14,7 +14,7 @@ end
 
 class Object
     def expand_el
-        raise Cfoo::Parser::ElParseError, "Couldn't parse object '#{self}'. I don't know how to parse an instance of '#{self.class}'"
+        raise Cfoo::Parser::ElExpansionError, "Couldn't parse object '#{self}'. I don't know how to parse an instance of '#{self.class}'"
     end
 end
 
@@ -78,8 +78,34 @@ end
 
 module Cfoo
     class Parser
-        #TODO: this doesn't only represent EL parsing errors. It wraps all parsing errors (below)
-        class ElParseError < RuntimeError
+        class ParseError < RuntimeError
+        end
+
+        class CfooParseError < ParseError
+            attr_reader :file_name, :cause
+
+            def initialize(file_name, failure)
+                super("Failed to parse '#{file_name}':\n#{failure}")
+                @file_name = file_name
+                @cause = cause
+            end
+        end
+
+        class ElExpansionError < ParseError
+        end
+
+        class ElParseError < ParseError
+            attr_accessor :file_name, :cause, :source, :line, :column
+
+            def initialize(file_name, cause, source, line, column)
+                super("Failed to parse '#{file_name}':\nSource: #{source}\nLocation: #{file_name} line #{line}, column #{column} \nCause: #{cause.ascii_tree}")
+
+                @file_name = file_name
+                @cause = cause
+                @source = source
+                @line = line
+                @column = column
+            end
         end
 
         def initialize(file_system)
@@ -89,13 +115,15 @@ module Cfoo
         def parse_file(file_name)
             @file_system.parse_file(file_name).expand_el
         rescue Parslet::ParseFailed => failure
-            #TODO: unit test this somehow
+            #TODO: spec this somehow
             cause = failure.cause
             source = cause.source.str
             row, column = @file_system.find_coordinates(source, file_name)
-            raise ElParseError, "Failed to parse '#{file_name}':\nSource: #{source}\nLocation: #{file_name} line #{row}, column #{column} \nCause: #{cause.ascii_tree}"
+            raise ElParseError.new(file_name, cause, source, row, column)
+        rescue ElExpansionError => failure
+            raise failure
         rescue Exception => failure
-            raise ElParseError, "Failed to parse '#{file_name}':\n#{failure}"
+            raise CfooParseError.new(file_name, failure)
         end
     end
 end

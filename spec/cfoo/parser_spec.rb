@@ -9,7 +9,7 @@ module Cfoo
             context "when parsing fails" do
                 it "raises an error" do
                     file_system.should_receive(:parse_file).and_raise "parsing failed"
-                    expect { parser.parse_file("myfile.yml") }.to raise_error Parser::ElParseError, "Failed to parse 'myfile.yml':\nparsing failed"
+                    expect { parser.parse_file("myfile.yml") }.to raise_error Parser::CfooParseError, "Failed to parse 'myfile.yml':\nparsing failed"
                 end
             end
 
@@ -152,7 +152,7 @@ module Cfoo
             context "when presented with an unknown object" do
                 it "raises an error" do
                     file_system.should_receive(:parse_file).with("myfile.yml").and_return(/a regex/)
-                    expect {parser.parse_file("myfile.yml")}.to raise_error Parser::ElParseError
+                    expect {parser.parse_file("myfile.yml")}.to raise_error Parser::ElExpansionError
                 end
             end
         end
