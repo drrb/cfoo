@@ -1,4 +1,3 @@
-@wip
 Feature: Error reporting
     As a Cfoo user
     I want to get useful parse errors
