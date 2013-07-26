@@ -159,12 +159,12 @@ YAML Type:
 
 CloudFormation:
 ```json
-{ "Fn::Base64" : "#!/bin/bash\necho 'Running script...'" }`
+{ "Fn::Base64" : "#!/bin/bash\necho 'Running script...'" }
 ```
 
 YAML Type:
 ```yaml
-!Base64 "#!/bin/bash\necho 'running script...'"`
+!Base64 "#!/bin/bash\necho 'running script...'"
 ```
 
 Alternative YAML Type:
