@@ -84,7 +84,41 @@ Properties:
     /opt/aws/bin/cfn-signal -e 0 -r "cfn-init completed" '$(WaitHandle)'
 ```
 
-### Shortcuts
+## Projects
+
+Using Cfoo, it is possible to split your templates up into logical components that will
+combined to form your CloudFormation template.
+
+First, create a directory in your project directory called `modules`. For each module,
+create some Cfoo templates defining the different parts of your app. Your project
+structure will look like this:
+
+```
+my-web-app
+└── modules
+    ├── application
+    │   ├── app_servers.yml
+    │   ├── database.yml
+    │   └── public_load_balancer.yml
+    ├── instances
+    │   └── instance_mappings.yml
+    └── network
+        ├── bastion.yml
+        ├── cfn_user.yml
+        ├── dns.yml
+        ├── nat.yml
+        ├── private_subnet.yml
+        ├── public_subnet.yml
+        └── vpc.yml
+```
+
+Use Cfoo to generate your project's CloudFormation template
+
+```terminal
+$ cfoo > web-app.template.json
+```
+
+## Shortcuts
 
 Cfoo allows you to simplify CloudFormation [intrinsic function](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html)
 references using its own shorthand
