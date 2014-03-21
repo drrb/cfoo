@@ -7,6 +7,10 @@ module Cfoo
             parser.parse("$(orange)").should == {"Ref" => "orange"}
         end
 
+        it 'turns simple EL references with dots into CloudFormation "Ref" maps' do
+            parser.parse("$(orange.color)").should == {"Ref" => "orange.color"}
+        end
+
         it 'turns EL references embedded in strings into appended arrays' do
             parser.parse("large $(MelonType) melon").should == {"Fn::Join" => [ "" , [ "large ", { "Ref" => "MelonType" }, " melon" ]]}
         end
@@ -15,12 +19,12 @@ module Cfoo
             parser.parse("I have $(number) apples and $(otherNumber) oranges").should == {"Fn::Join" => [ "" , ["I have ", { "Ref" => "number" }, " apples and ", { "Ref" => "otherNumber" }, " oranges" ]]}
         end
 
-        it 'turns EL attribute references into CloudFormation "GetAtt" maps' do
-            parser.parse("$(apple.color)").should == {"Fn::GetAtt" => ["apple", "color"]}
-        end
-
         it 'turns EL attribute map references into CloudFormation "GetAtt" maps' do
             parser.parse("$(apple[color])").should == {"Fn::GetAtt" => ["apple", "color"]}
+        end
+
+        it 'turns EL attribute map references with dots into CloudFormation "GetAtt" maps' do
+            parser.parse("$(apple[color.primary])").should == {"Fn::GetAtt" => ["apple", "color.primary"]}
         end
 
         it 'turns EL map references into CloudFormation "FindInMap" maps' do

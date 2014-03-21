@@ -139,9 +139,7 @@ Cfoo Shortcut: `$(SubnetConfig[VPC][CIDR])`
 
 CloudFormation: `{ "Fn::GetAtt" : [ "Ec2Instance", "PublicIp" ] }`
 
-Cfoo Shortcut: `$(Ec2Instance.PublicIp)`
-
-Other Shortcut: `$(Ec2Instance[PublicIp])`
+Cfoo Shortcut: `$(Ec2Instance[PublicIp])`
 
 ##### Embedded Reference
 

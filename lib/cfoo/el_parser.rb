@@ -28,13 +28,12 @@ module Cfoo
         rule(:dot) { str('.') }
         rule(:comma) { str(",") >> space? }
         rule(:text_character) { match['^\\\\$'] }
-        rule(:identifier) { match['a-zA-Z0-9_\-:'].repeat(1).as(:identifier) >> space? }
+        rule(:identifier) { match['a-zA-Z0-9._\-:'].repeat(1).as(:identifier) >> space? }
         rule(:text) { text_character.repeat(1).as(:text) }
 
         rule(:attribute_reference) do
             (
                 expression.as(:reference) >> (
-                    str(".") >> identifier.as(:attribute) |
                     str("[") >> expression.as(:attribute) >> str("]")
                 )
             ).as(:attribute_reference)
