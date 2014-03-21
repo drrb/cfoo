@@ -75,7 +75,7 @@ Properties:
 
     function error_exit
     {
-      /opt/aws/bin/cfn-signal -e 1 -r "$1" '$(WaitHandle)'
+      /opt/aws/bin/cfn-signal -e 1 -r "\$1" '$(WaitHandle)'
       exit 1
     }
 
