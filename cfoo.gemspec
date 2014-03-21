@@ -31,5 +31,4 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "cucumber"
   gem.add_development_dependency "simplecov"
   gem.add_development_dependency "coveralls", ">= 0.6.3"
-  gem.add_development_dependency "json" # Coveralls needs it
 end
