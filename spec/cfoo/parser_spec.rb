@@ -51,6 +51,11 @@ module Cfoo
                     parser.parse_file("myfile.yml").should == {"Ref" => "orange"}
                 end
 
+                it 'turns simple EL references with dots into CloudFormation "Ref" maps' do
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(orange.color)")
+                    parser.parse_file("myfile.yml").should == {"Ref" => "orange.color"}
+                end
+
                 it 'turns EL references embedded in strings into appended arrays' do
                     file_system.should_receive(:parse_file).with("myfile.yml").and_return("large $(MelonType) melon")
                     parser.parse_file("myfile.yml").should == {"Fn::Join" => [ "", [ "large ", { "Ref" => "MelonType" }, " melon" ] ] }
@@ -63,8 +68,13 @@ module Cfoo
                 end
 
                 it 'turns EL attribute references into CloudFormation "GetAtt" maps' do
-                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(apple.color)")
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(apple[color])")
                     parser.parse_file("myfile.yml").should == {"Fn::GetAtt" => ["apple", "color"]}
+                end
+
+                it 'turns EL attribute references with dots into CloudFormation "GetAtt" maps' do
+                    file_system.should_receive(:parse_file).with("myfile.yml").and_return("$(apple[color.primary])")
+                    parser.parse_file("myfile.yml").should == {"Fn::GetAtt" => ["apple", "color.primary"]}
                 end
 
                 it 'turns EL map references into CloudFormation "FindInMap" maps' do
