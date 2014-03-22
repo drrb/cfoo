@@ -32,7 +32,8 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "simplecov"
   gem.add_development_dependency "coveralls", ">= 0.6.3"
   gem.add_development_dependency "mime-types", "< 2" # Needed to support Ruby 1.8
-  unless RUBY_VERSION.start_with? "1.8"
+
+  unless ["1.8.7", "1.9.2"].include? RUBY_VERSION
       gem.add_development_dependency "guard"
       gem.add_development_dependency "guard-rspec"
       gem.add_development_dependency "terminal-notifier-guard"
