@@ -1,5 +1,22 @@
 require 'cfoo/yaml_parser'
 
+class String
+    def coordinates_of_index(index)
+        lines = split("\n")
+        line_number = 1
+        column_number = index + 1
+        lines.each do |line|
+            if line.length < column_number
+                line_number += 1
+                column_number -= line.length
+            else
+                return [ line_number, column_number ]
+            end
+        end
+        [ -1, -1 ]
+    end
+end
+
 module Cfoo
     class FileSystem
         def initialize(project_root, yaml_parser)
@@ -19,19 +36,19 @@ module Cfoo
         end
 
         def find_coordinates(string, file_name)
-            matching_lines = []
             open(file_name) do |file|
-                file.each_with_index do|line, row_index|
-                    if line.include? string
-                        column_index = line.index(string)
-                        row = row_index + 1
-                        column = column_index + 1
-                        return [row, column]
-                    end
+                content = file.read
+                lines = string.split "\n"
+                patterns = lines.map { |line| Regexp.escape(line) }
+                pattern = patterns.join '\n\s*'
+                regex = %r[#{pattern}]
+                index = regex =~ content
+                if index.nil?
+                    raise CoordinatesNotFound, "Couldn't find '#{string.inspect}' in '#{file_name}'"
+                else
+                    content.coordinates_of_index(index)
                 end
             end
-            #TODO test this
-            raise "Couldn't find '#{string}' in '#{file}'"
         end
 
         def glob_relative(path)
@@ -44,5 +61,8 @@ module Cfoo
         def list(path)
             Dir.glob("#{resolve_file path}/*")
         end
+    end
+
+    class CoordinatesNotFound < StandardError
     end
 end

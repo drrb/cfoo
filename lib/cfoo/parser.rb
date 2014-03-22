@@ -98,7 +98,7 @@ module Cfoo
             attr_accessor :file_name, :cause, :source, :line, :column
 
             def initialize(file_name, cause, source, line, column)
-                super("Failed to parse '#{file_name}':\nSource: #{source}\nLocation: #{file_name} line #{line}, column #{column} \nCause: #{cause.ascii_tree}")
+                super("Failed to parse '#{file_name}':\nLocation: #{file_name} line #{line}, column #{column} \nSource: #{source}\nCause: #{cause.ascii_tree}")
 
                 @file_name = file_name
                 @cause = cause

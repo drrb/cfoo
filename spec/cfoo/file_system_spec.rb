@@ -50,9 +50,28 @@ module Cfoo
                     dog
                 EOF
 
-                row, column = file_system.find_coordinates("lazy", "test.txt")
-                row.should be 2
-                column.should be 36
+                coordinates = file_system.find_coordinates("lazy", "test.txt")
+                expect(coordinates).to eq [2,37]
+            end
+            it "returns the coordinates of multiline strings" do
+                write_project_file "test.txt", <<-EOF
+                    the quick brown fox
+                    jumps over the lazy
+                    dog
+                EOF
+
+                file_system.find_coordinates("lazy\ndog", "test.txt")
+            end
+            it "raises an error if it can't find the text" do
+                write_project_file "test.txt", <<-EOF
+                    the quick brown fox
+                    jumps over the lazy
+                    dog
+                EOF
+
+                expect {
+                    file_system.find_coordinates("xxxxxx", "test.txt")
+                }.to raise_error CoordinatesNotFound
             end
         end
 
@@ -74,7 +93,7 @@ module Cfoo
                 file_system.glob_relative("modules/*.yml").should == ["modules/c.yml"]
             end
         end
-        
+
         describe "#parse_file" do
             it "loads the file with the YAML parser" do
                yaml_parser.should_receive(:load_file).with("#{project_root}/yamlfile.yml")
