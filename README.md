@@ -1,6 +1,6 @@
 # Cfoo
 
-[![Build Status](https://travis-ci.org/drrb/cfoo.png?branch=master)](https://travis-ci.org/drrb/cfoo)
+[![Build Status](https://travis-ci.org/drrb/cfoo.svg?branch=master)](https://travis-ci.org/drrb/cfoo)
 [![Coverage Status](https://coveralls.io/repos/drrb/cfoo/badge.png?branch=master)](https://coveralls.io/r/drrb/cfoo)
 [![Code Climate](https://codeclimate.com/github/drrb/cfoo.png)](https://codeclimate.com/github/drrb/cfoo)
 
