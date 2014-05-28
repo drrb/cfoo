@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/drrb/cfoo.svg)](https://travis-ci.org/drrb/cfoo)
 [![Coverage Status](https://img.shields.io/coveralls/drrb/cfoo.svg)](https://coveralls.io/r/drrb/cfoo)
-[![Code Climate](https://codeclimate.com/github/drrb/cfoo.svg)](https://codeclimate.com/github/drrb/cfoo)
+[![Code Climate](https://img.shields.io/codeclimate/github/drrb/cfoo.svg)](https://codeclimate.com/github/drrb/cfoo)
 
 [![Gem Version](https://badge.fury.io/rb/cfoo.svg)](https://badge.fury.io/rb/cfoo)
 [![Dependency Status](https://gemnasium.com/drrb/cfoo.svg)](https://gemnasium.com/drrb/cfoo)
