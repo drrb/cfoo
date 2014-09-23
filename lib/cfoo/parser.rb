@@ -65,6 +65,12 @@ module YAML
             case type_id
             when "Ref"
                 { "Ref" => value.expand_el }
+            when "GetAZs"
+                if value.nil?
+                    { "Fn::GetAZs" => "" }
+                else
+                    { "Fn::GetAZs" => value.expand_el }
+                end
             when CLOUDFORMATION_FUNCTION_REGEX
                 { "Fn::#{type_id}" => value.expand_el }
             when "Concat"
