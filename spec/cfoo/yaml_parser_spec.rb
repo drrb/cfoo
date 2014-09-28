@@ -72,9 +72,9 @@ module Cfoo
                     parser.load_file("#{working_dir}/get_azs.yml").should == YAML::DomainType.create("GetAZs", "myregion")
                 end
                 it "converts empty AZ lookups to GetAZs function-calls" do
-                    write "#{working_dir}/get_azs_empty.yml", "!GetAZs"
+                    write "#{working_dir}/get_azs_empty.yml", "!GetAZs ''"
 
-                    parser.load_file("#{working_dir}/get_azs_empty.yml").should == YAML::DomainType.create("GetAZs", nil)
+                    parser.load_file("#{working_dir}/get_azs_empty.yml").should == YAML::DomainType.create("GetAZs", "")
                 end
             end
         end

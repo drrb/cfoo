@@ -91,7 +91,7 @@ Feature: YAMLy shortcuts
     Scenario: AZ listing with empty string
         Given I have a file "map.yml" containing
         """
-        AvailabilityZones: !GetAZs
+        AvailabilityZones: !GetAZs ""
         """
         When I process "map.yml"
         Then the output should match JSON
