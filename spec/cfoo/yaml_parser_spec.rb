@@ -74,7 +74,8 @@ module Cfoo
                 it "converts empty AZ lookups to GetAZs function-calls" do
                     write "#{working_dir}/get_azs_empty.yml", "!GetAZs ''"
 
-                    parser.load_file("#{working_dir}/get_azs_empty.yml").should == YAML::DomainType.create("GetAZs", "")
+                    value = YAML.name == "Psych" ? nil : ""
+                    parser.load_file("#{working_dir}/get_azs_empty.yml").should == YAML::DomainType.create("GetAZs", value)
                 end
             end
         end
