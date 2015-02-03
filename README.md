@@ -56,7 +56,7 @@ Snippet from a CloudFormation template (based on [this example](https://s3.amazo
     "    --region ", { "Ref" : "AWS::Region" }, " || error_exit 'Failed to run cfn-init'\n",
 
     "/opt/aws/bin/cfn-signal -e 0 -r \"cfn-init complete\" '", { "Ref" : "WaitHandle" }, "'\n"
-  ]]}}        
+  ]]}}
 }
 ```
 
@@ -66,7 +66,7 @@ Equivalent Cfoo template snippet:
 Properties:
   ImageId : AWSRegion2AMI[$(AWS::Region)][AMI]
   InstanceType: $(InstanceType)
-  SecurityGroups: 
+  SecurityGroups:
      - $(FrontendGroup)
   KeyName: $(KeyName)
   UserData: !Base64 |
@@ -204,6 +204,18 @@ Alternative YAML Type:
 !Base64 |
     #!/bin/bash
     echo 'running script...'
+```
+
+##### Condition Function
+
+CloudFormation:
+```json
+{ "Fn::Equals": [ "sg-mysggroup", {"Ref": "ASecurityGroup"} ] },
+```
+
+YAML Type:
+```yaml
+!Equals [ "sg-mysggroup", $(ASecurityGroup) ]
 ```
 
 ## Goals

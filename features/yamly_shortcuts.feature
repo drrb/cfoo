@@ -17,16 +17,30 @@ Feature: YAMLy shortcuts
         """
 
     Scenario: Attribute
-        Given I have a file "ref.yml" containing
+        Given I have a file "getatt.yml" containing
         """
         Attribute: !GetAtt [ BastionHost, PublicIp ]
         """
-        When I process "ref.yml"
+        When I process "getatt.yml"
         Then the output should match JSON
         """
         {
             "AWSTemplateFormatVersion" : "2010-09-09",
             "Attribute" :  { "Fn::GetAtt" : [ "BastionHost", "PublicIp" ]}
+        }
+        """
+
+    Scenario: Condition
+        Given I have a file "cond.yml" containing
+        """
+        Condition: !Equals [ "string a", "string b" ]
+        """
+        When I process "cond.yml"
+        Then the output should match JSON
+        """
+        {
+            "AWSTemplateFormatVersion" : "2010-09-09",
+            "Condition": { "Fn::Equals" : [ "string a", "string b" ]}
         }
         """
 
