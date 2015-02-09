@@ -51,6 +51,11 @@ module Cfoo
 
                     parser.load_file("#{working_dir}/join.yml").should == YAML::DomainType.create("Join", ["", ["a","b","c"]])
                 end
+                it "wraps selects in AWS Select function-calls" do
+                    write "#{working_dir}/select.yml", "!Select [1, [a, b, c]]"
+
+                    parser.load_file("#{working_dir}/select.yml").should == YAML::DomainType.create("Select", [1, ["a","b","c"]])
+                end
                 it "wraps concatenations in AWS Join function-calls with empty strings" do
                     write "#{working_dir}/concat.yml", "!Concat [a, b, c]"
 
@@ -60,6 +65,11 @@ module Cfoo
                     write "#{working_dir}/findinmap.yml", "!FindInMap [Map, Key, Value]"
 
                     parser.load_file("#{working_dir}/findinmap.yml").should == YAML::DomainType.create("FindInMap", ["Map", "Key", "Value"])
+                end
+                it "wraps conditions in AWS condition function-calls" do
+                    write "#{working_dir}/findinmap.yml", "!Equals [a, b]"
+
+                    parser.load_file("#{working_dir}/findinmap.yml").should == YAML::DomainType.create("Equals", ["a", "b"])
                 end
                 it "wraps base64 strings in AWS Base64 function-calls" do
                     write "#{working_dir}/base64.yml", "!Base64 myencodedstring"
