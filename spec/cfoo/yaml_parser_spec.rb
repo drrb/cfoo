@@ -51,6 +51,11 @@ module Cfoo
 
                     parser.load_file("#{working_dir}/join.yml").should == YAML::DomainType.create("Join", ["", ["a","b","c"]])
                 end
+                it "wraps imported value strings in AWS ImportValue function-calls" do
+                    write "#{working_dir}/importvalue.yml", "!ImportValue exportedvaluename"
+
+                    parser.load_file("#{working_dir}/importvalue.yml").should == YAML::DomainType.create("ImportValue", "exportedvaluename")
+                end
                 it "wraps selects in AWS Select function-calls" do
                     write "#{working_dir}/select.yml", "!Select [1, [a, b, c]]"
 
