@@ -108,6 +108,11 @@ module Cfoo
 
                     parser.parse_file("join.yml").should == {"Fn::Join" => [ "" , [ "a", "b", "c" ] ] }
                 end
+                it "wraps splits in AWS Split function-calls" do
+                    file_system.should_receive(:parse_file).with("split.yml").and_return(YAML::DomainType.create("Split", ["|", "a|b|c"]))
+
+                    parser.parse_file("split.yml").should == {"Fn::Split" => [ "|" , "a|b|c" ] }
+                end
                 it "wraps map lookups in AWS FindInMap function-calls" do
                     file_system.should_receive(:parse_file).with("findinmap.yml").and_return(YAML::DomainType.create("FindInMap", ["Map", "Key", "Value"]))
 

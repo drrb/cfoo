@@ -60,6 +60,22 @@ Feature: YAMLy shortcuts
         }
         """
 
+    Scenario: Split function call
+        Given I have a file "split.yml" containing
+        """
+        Split: !Split
+            - "|"
+            - "a|b|c"
+        """
+        When I process "split.yml"
+        Then the output should match JSON
+        """
+        {
+            "AWSTemplateFormatVersion" : "2010-09-09",
+            "Split" :  { "Fn::Split" : [ "|", "a|b|c" ] }
+        }
+        """
+
     Scenario: Join function call with empty strings
         Given I have a file "join.yml" containing
         """
