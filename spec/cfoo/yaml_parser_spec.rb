@@ -51,6 +51,11 @@ module Cfoo
 
                     parser.load_file("#{working_dir}/join.yml").should == YAML::DomainType.create("Join", ["", ["a","b","c"]])
                 end
+                it "wraps splits in AWS Split function-calls" do
+                    write "#{working_dir}/split.yml", "!Split ['|', 'a|b|c']"
+
+                    parser.load_file("#{working_dir}/split.yml").should == YAML::DomainType.create("Split", ["|", "a|b|c"])
+                end
                 it "wraps imported value strings in AWS ImportValue function-calls" do
                     write "#{working_dir}/importvalue.yml", "!ImportValue exportedvaluename"
 
